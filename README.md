@@ -10,6 +10,6 @@
 ## Diagrama entidad relación
 ![image info](archivos/DiagramaER.png)
 ## Prototipo en Figma
-https://www.figma.com/file/YlLpmKhGvIb19d51LiIaaW/marcaciones?type=design&node-id=30%3A308&mode=design&t=eRhdJG6aTQfAfdWJ-1
+[Link a protopipo](https://www.figma.com/file/YlLpmKhGvIb19d51LiIaaW/marcaciones?type=design&node-id=30%3A308&mode=design&t=eRhdJG6aTQfAfdWJ-1)
 
 #### Nota: El sistema está siendo desarrollado con motivo de prácticas preprofesionales desde cero para el uso exclusivo de la empresa MICABAL SA
