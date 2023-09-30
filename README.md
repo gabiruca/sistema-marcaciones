@@ -11,5 +11,10 @@
 ![image info](archivos/DiagramaER.png)
 ## Prototipo en Figma
 [Link a protopipo](https://www.figma.com/file/YlLpmKhGvIb19d51LiIaaW/marcaciones?type=design&node-id=30%3A308&mode=design&t=eRhdJG6aTQfAfdWJ-1)
+## Requerimientos
+  * React
+  * 
+### Plantilla
+[Plantilla berry-free-react-admin-template](https://github.com/codedthemes/berry-free-react-admin-template.git)
 
 #### Nota: El sistema está siendo desarrollado con motivo de prácticas preprofesionales desde cero para el uso exclusivo de la empresa MICABAL SA
