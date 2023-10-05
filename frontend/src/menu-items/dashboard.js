@@ -16,24 +16,21 @@ const dashboard = {
       title: 'Agregar',
       type: 'item',
       url: '/#',
-      icon: icons.IconCirclePlus,
-      breadcrumbs: false
+      icon: icons.IconCirclePlus
     },
     {
       id: 'default',
       title: 'Consultar',
       type: 'item',
       url: '/consultar',
-      icon: icons.IconVocabulary,
-      breadcrumbs: false
+      icon: icons.IconVocabulary
     },
     {
       id: 'default',
       title: 'Modificar',
       type: 'item',
       url: '/#',
-      icon: icons.IconEdit,
-      breadcrumbs: false
+      icon: icons.IconEdit
     }
   ]
 };
