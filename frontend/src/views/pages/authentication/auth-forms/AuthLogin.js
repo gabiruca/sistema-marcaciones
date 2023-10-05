@@ -86,7 +86,7 @@ const FirebaseLogin = ({ ...others }) => {
                 name="email"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                label="Email Address / Username"
+                label="email"
                 inputProps={{}}
               />
               {touched.email && errors.email && (

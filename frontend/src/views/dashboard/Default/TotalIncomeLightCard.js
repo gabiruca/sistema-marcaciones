@@ -9,7 +9,7 @@ import MainCard from 'ui-component/cards/MainCard';
 import TotalIncomeCard from 'ui-component/cards/Skeleton/TotalIncomeCard';
 
 // assets
-import StorefrontTwoToneIcon from '@mui/icons-material/StorefrontTwoTone';
+
 
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -51,6 +51,25 @@ const TotalIncomeLightCard = ({ isLoading }) => {
           <Box sx={{ p: 2 }}>
             <List sx={{ py: 0 }}>
               <ListItem alignItems="center" disableGutters sx={{ py: 0 }}>
+                <ListItemText
+                  sx={{
+                    py: 0,
+                    mt: 0.45,
+                    mb: 0.45
+                  }}
+                  primary={<Typography variant="h2">John Doe</Typography>}
+                  secondary={
+                    <Typography
+                      variant="subtitle1"
+                      sx={{
+                        color: theme.palette.grey[500],
+                        mt: 0.5
+                      }}
+                    >
+                      CI: 0123456789
+                    </Typography>
+                  }
+                />
                 <ListItemAvatar>
                   <Avatar
                     variant="rounded"
@@ -61,28 +80,9 @@ const TotalIncomeLightCard = ({ isLoading }) => {
                       color: theme.palette.warning.dark
                     }}
                   >
-                    <StorefrontTwoToneIcon fontSize="inherit" />
+                    
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText
-                  sx={{
-                    py: 0,
-                    mt: 0.45,
-                    mb: 0.45
-                  }}
-                  primary={<Typography variant="h4">$203k</Typography>}
-                  secondary={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        color: theme.palette.grey[500],
-                        mt: 0.5
-                      }}
-                    >
-                      Total Income
-                    </Typography>
-                  }
-                />
               </ListItem>
             </List>
           </Box>

@@ -1,22 +1,38 @@
 // assets
-import { IconDashboard } from '@tabler/icons';
+import { IconVocabulary, IconCirclePlus, IconEdit } from '@tabler/icons';
 
 // constant
-const icons = { IconDashboard };
+const icons = { IconVocabulary, IconCirclePlus, IconEdit };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
 const dashboard = {
   id: 'dashboard',
-  title: 'Dashboard',
+  title: 'Marcaciones',
   type: 'group',
   children: [
     {
       id: 'default',
-      title: 'Dashboard',
+      title: 'Agregar',
       type: 'item',
-      url: '/dashboard/default',
-      icon: icons.IconDashboard,
+      url: '/#',
+      icon: icons.IconCirclePlus,
+      breadcrumbs: false
+    },
+    {
+      id: 'default',
+      title: 'Consultar',
+      type: 'item',
+      url: '/consultar',
+      icon: icons.IconVocabulary,
+      breadcrumbs: false
+    },
+    {
+      id: 'default',
+      title: 'Modificar',
+      type: 'item',
+      url: '/#',
+      icon: icons.IconEdit,
       breadcrumbs: false
     }
   ]
