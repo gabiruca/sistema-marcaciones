@@ -1,16 +1,9 @@
-import PropTypes from 'prop-types';
-
-// material-ui
 import { Grid,Typography } from '@mui/material';
-
-// project imports
 import SkeletonTotalGrowthBarChart from 'ui-component/cards/Skeleton/TotalGrowthBarChart';
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
 
-// ==============================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||============================== //
-
-const TotalGrowthBarChart = ({ isLoading }) => {
+const BodySpace = ({ isLoading }) => {
 
   return (
     <>
@@ -24,7 +17,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                 <Grid item>
                   <Grid container direction="column" spacing={1}>
                     <Grid item>
-                      <Typography variant="subtitle2">Total Growth</Typography>
+                      <Typography variant="subtitle2">Here comes Solicitudes</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -36,9 +29,4 @@ const TotalGrowthBarChart = ({ isLoading }) => {
     </>
   );
 };
-
-TotalGrowthBarChart.propTypes = {
-  isLoading: PropTypes.bool
-};
-
-export default TotalGrowthBarChart;
+export default BodySpace;

@@ -1,32 +1,32 @@
-import { lazy } from 'react';
-
-// project imports
 import MainLayout from 'layout/MainLayout';
+import { lazy } from 'react';
 import Loadable from 'ui-component/Loadable';
 
-// dashboard routing
-const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
-
-
-// ==============================|| MAIN ROUTING ||============================== //
+const Consultar = Loadable(lazy(() => import('views/administrador/consultar')));
+const Agregar = Loadable(lazy(() => import('views/administrador/agregar')));
+const AgregarUsuario = Loadable(lazy(() => import('views/administrador/usuario-agregar')));
+const Solicitudes = Loadable(lazy(() => import('views/administrador/solicitudes')));
 
 const MainRoutes = {
-  path: '/',
+  path: '/administrador',
   element: <MainLayout />,
   children: [
     {
-      path: '/',
-      element: <DashboardDefault />
+      path: 'agregar',
+      element: <Agregar />
     },
     {
-      path: 'dashboard',
-      children: [
-        {
-          path: 'default',
-          element: <DashboardDefault />
-        }
-      ]
-    }
+      path: 'consultar',
+      element: <Consultar />
+    },
+    {
+      path: 'agregar-usuario',
+      element: <AgregarUsuario />
+    },
+    {
+      path: 'solicitudes',
+      element: <Solicitudes />
+    },
   ]
 };
 

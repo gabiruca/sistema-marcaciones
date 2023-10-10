@@ -5,11 +5,11 @@ import { useTheme } from '@mui/material/styles';
 import { Avatar, Box, ButtonBase } from '@mui/material';
 
 // project imports
-import LogoSection from '../LogoSection';
 import ProfileSection from './ProfileSection';
 
 // assets
 import { IconMenu2 } from '@tabler/icons';
+import rutaImg from 'assets/images/logo-micabal-noback.png';
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
@@ -29,7 +29,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
         }}
       >
         <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
-          <LogoSection />
+          <img src={rutaImg} alt="Micabal logo" width="80%"></img>
         </Box>
         <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden' }}>
           <Avatar

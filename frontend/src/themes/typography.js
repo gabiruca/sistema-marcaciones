@@ -128,6 +128,11 @@ export default function themeTypography(theme) {
       width: '44px',
       height: '44px',
       fontSize: '1.5rem'
+    },
+    largestAvatar: {
+      width: '100px',
+      height: '120px',
+      fontSize: '1.5rem'
     }
   };
 }

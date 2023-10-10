@@ -10,7 +10,7 @@ import { BrowserView, MobileView } from 'react-device-detect';
 
 // project imports
 import MenuList from './MenuList';
-import LogoSection from '../LogoSection';
+import rutaImg from 'assets/images/logo-micabal-noback.png';
 import { drawerWidth } from 'store/constant';
 
 // ==============================|| SIDEBAR DRAWER ||============================== //
@@ -23,7 +23,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
     <>
       <Box sx={{ display: { xs: 'block', md: 'none' } }}>
         <Box sx={{ display: 'flex', p: 2, mx: 'auto' }}>
-          <LogoSection />
+          <img src={rutaImg} alt="Micabal logo" width="80%"></img>
         </Box>
       </Box>
       <BrowserView>

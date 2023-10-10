@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Chip, ListItemButton, ListItemIcon, ListItemText, Typography, useMediaQuery } from '@mui/material';
+import { ListItemButton, ListItemIcon, ListItemText, Typography, useMediaQuery } from '@mui/material';
 
 // project imports
 import { MENU_OPEN, SET_MENU } from 'store/actions';
@@ -70,7 +70,7 @@ const NavItem = ({ item, level }) => {
       disabled={item.disabled}
       sx={{
         borderRadius: `${customization.borderRadius}px`,
-        mb: 0.5,
+        mb: 0.3,
         alignItems: 'flex-start',
         backgroundColor: level > 1 ? 'transparent !important' : 'inherit',
         py: level > 1 ? 1 : 1.25,
@@ -86,23 +86,7 @@ const NavItem = ({ item, level }) => {
             {item.title}
           </Typography>
         }
-        secondary={
-          item.caption && (
-            <Typography variant="caption" sx={{ ...theme.typography.subMenuCaption }} display="block" gutterBottom>
-              {item.caption}
-            </Typography>
-          )
-        }
       />
-      {item.chip && (
-        <Chip
-          color={item.chip.color}
-          variant={item.chip.variant}
-          size={item.chip.size}
-          label={item.chip.label}
-          avatar={item.chip.avatar && <Avatar>{item.chip.avatar}</Avatar>}
-        />
-      )}
     </ListItemButton>
   );
 };

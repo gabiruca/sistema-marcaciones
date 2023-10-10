@@ -1,11 +1,12 @@
-import dashboard from './dashboard';
-import pages from './pages';
-import utilities from './utilities';
+import marcaciones from './marcaciones';
+import usuarios from './usuarios';
+import justificaciones from './justificaciones';
+import userMarcaciones from './userMarcaciones';
+import userJustificaciones from './userJustificaciones';
 
-// ==============================|| MENU ITEMS ||============================== //
-
+//PENDIENTE: validación con el tipo de usuario
 const menuItems = {
-  items: [dashboard, pages, utilities]
+  items: [marcaciones, usuarios, justificaciones,userMarcaciones, userJustificaciones]
 };
 
 export default menuItems;

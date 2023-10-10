@@ -1,24 +1,19 @@
-// assets
 import { IconChecklist } from '@tabler/icons';
-
-// constant
 const icons = {IconChecklist};
 
-// ==============================|| UTILITIES MENU ITEMS ||============================== //
-
-const utilities = {
-  id: 'justificaciones',
+const userJustificaciones = {
+  id: 'user-justificaciones',
   title: 'Justificaciones',
   type: 'group',
   children: [
     {
-      id: 'solicitudes',
+      id: 'user-solicitudes',
       title: 'Solicitudes',
       type: 'item',
-      url: '/#',
+      url: '/usuario/#',
       icon: icons.IconChecklist
     }
   ]
 };
 
-export default utilities;
+export default userJustificaciones;

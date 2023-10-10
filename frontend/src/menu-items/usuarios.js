@@ -1,24 +1,19 @@
-// assets
 import { IconUserPlus } from '@tabler/icons';
-
-// constant
 const icons = {IconUserPlus};
 
-// ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
-
-const pages = {
+const usuarios = {
   id: 'users',
   title: 'Usuarios',
   type: 'group',
   children: [
     {
-      id: 'agregar',
+      id: 'agregar-usuario',
       title: 'Agregar',
       type: 'item',
       icon: icons.IconUserPlus,
-      url: '/#'
+      url: '/administrador/agregar-usuario'
     }
   ]
 };
 
-export default pages;
+export default usuarios;
