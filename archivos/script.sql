@@ -21,6 +21,7 @@ create table Marcacion(
     fecha date NOT NULL,
     horaEntrada time,
     horaSalida time,
+    publicado boolean DEFAULT 'false',
     PRIMARY KEY(idMarcacion),
     FOREIGN KEY (codigoBiometrico) REFERENCES Usuario(codigoBiometrico)
 );

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
 import UserCard from './UserCard';
-import BodyPart from './TotalGrowthBarChart';
+import BodyPart from './TablaMarcaciones';
 import { gridSpacing } from 'store/constant';
 
 const Consultar = () => {
@@ -16,7 +16,7 @@ const Consultar = () => {
         <UserCard isLoading={isLoading} />
       </Grid>
       <Grid item xs={12}>
-        <BodyPart isLoading={isLoading} />
+        <BodyPart/>
       </Grid>
     </Grid>
   );
