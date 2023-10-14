@@ -1,17 +1,9 @@
 import PropTypes from 'prop-types';
-
-// material-ui
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Box, ButtonBase } from '@mui/material';
-
-// project imports
 import ProfileSection from './ProfileSection';
-
-// assets
 import { IconMenu2 } from '@tabler/icons';
 import rutaImg from 'assets/images/logo-micabal-noback.png';
-
-// ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
 const Header = ({ handleLeftDrawerToggle }) => {
   const theme = useTheme();
@@ -25,7 +17,8 @@ const Header = ({ handleLeftDrawerToggle }) => {
           display: 'flex',
           [theme.breakpoints.down('md')]: {
             width: 'auto'
-          }
+          },
+          mt:1.5
         }}
       >
         <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
@@ -50,10 +43,13 @@ const Header = ({ handleLeftDrawerToggle }) => {
       </Box>
 
       <Box sx={{ flexGrow: 1 }} />
-      <h1>Nombre de sección</h1>
+      
+      <Box sx={{mt:1.5}}>
+        <h1>Nombre de sección</h1>
+      </Box>
       <Box sx={{ flexGrow: 1 }} />
 
-      <ProfileSection />
+      <ProfileSection sx={{my:2}}/>
     </>
   );
 };

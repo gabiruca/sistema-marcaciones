@@ -25,6 +25,7 @@ import ProfilePic from 'assets/images/picture-placeholder.jpg';
 
 // assets
 import { IconSettings } from '@tabler/icons';
+import { lineHeight } from '@mui/system';
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -35,12 +36,12 @@ const ProfileSection = () => {
 
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
-  /**
-   * anchorRef is used on different componets and specifying one type leads to other components throwing an error
-   * */
   const anchorRef = useRef(null);
+
   const handleLogout = async () => {
-    console.log('Logout');
+    lineHeight
+    localStorage.clear();
+    window.location.href = '/';
   };
 
   const handleClose = (event) => {
@@ -158,7 +159,7 @@ const ProfileSection = () => {
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 0}
-                          onClick={(event) => handleListItemClick(event, 0, '#')}
+                          onClick={(event) => handleListItemClick(event, 0, '/perfil')}
                         >
                           <ListItemText primary={<Typography variant="body2">Perfil</Typography>} />
                         </ListItemButton>

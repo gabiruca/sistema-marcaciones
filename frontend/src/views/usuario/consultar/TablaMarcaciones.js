@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
+import Button from '@mui/material/Button';
 import MainCard from 'ui-component/cards/MainCard';
 import { IconChecklist } from '@tabler/icons';
 const icons = {IconChecklist};
@@ -29,6 +30,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     backgroundColor: theme.palette.action.hover,
   }
 }));
+
+const handleClick =()=>{
+  window.location.href = '/usuario/enviar-solicitud'
+}
 
 function createData(codigo, fecha, entrada, salida, atraso, justificacion) {
   return { codigo, fecha, entrada, salida, atraso, justificacion };
@@ -91,7 +96,7 @@ function TablaMarcaciones () {
                         <StyledTableCell align="center">{row.entrada}</StyledTableCell>
                         <StyledTableCell align="center">{row.salida}</StyledTableCell>
                         <StyledTableCell align="center">{row.atraso}</StyledTableCell>
-                        <StyledTableCell align="center">{row.justificacion}</StyledTableCell>
+                        <StyledTableCell align="center"><Button onClick={handleClick}>{row.justificacion}</Button></StyledTableCell>
                       </StyledTableRow>
                       ))}
                     </TableBody>

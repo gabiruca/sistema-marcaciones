@@ -1,0 +1,13 @@
+.div-class{
+    margin: 4%;
+}
+.tags-names{
+    font-size:medium;
+    padding-top: 5em;
+}
+input{
+    width: 20%;
+    padding: 1.5%;
+    margin-left: 4em;
+    border-radius: 2%;
+}

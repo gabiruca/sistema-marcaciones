@@ -1,0 +1,34 @@
+.div-class{
+    margin: 4%;
+}
+.tags-names{
+    font-size:medium;
+    margin: 2% auto;
+}
+input{
+    width: 60%;
+    padding: 1.5%;
+    margin-right: 4%;
+    border-radius: 2%;
+}
+#profile{
+    width: 10em;
+    margin:0;
+    padding: 0;
+}
+#input-pic{
+    margin: 0;
+    padding:0;
+    opacity: 0;
+}
+#div-pic{
+    margin: 2.5em;
+}
+#profile-head{
+ display: flex;
+}
+#name{
+    margin-top: auto;
+    margin-bottom:auto;
+    margin-left: 3em;
+}
