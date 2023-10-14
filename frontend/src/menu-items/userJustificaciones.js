@@ -7,10 +7,10 @@ const userJustificaciones = {
   type: 'group',
   children: [
     {
-      id: 'user-solicitudes',
+      id: 'userSolicitudes',
       title: 'Solicitudes',
       type: 'item',
-      url: '/usuario/#',
+      url: '/usuario/solicitudes-user',
       icon: icons.IconChecklist
     }
   ]

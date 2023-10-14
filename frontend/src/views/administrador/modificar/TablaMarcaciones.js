@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,9 +9,12 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import MainCard from 'ui-component/cards/MainCard';
-import { IconChecklist } from '@tabler/icons';
-const icons = {IconChecklist};
-import * as React from 'react';
+import { IconDeviceFloppy } from '@tabler/icons';
+const icons = {IconDeviceFloppy};
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import dayjs from 'dayjs';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -35,23 +39,23 @@ function createData(codigo, fecha, entrada, salida, atraso, justificacion) {
 }
 
 const rows = [
-  createData(1, '2023-10-08', '09:00:00', '17:00:00', '01:00:00',<icons.IconChecklist />),
-  createData(2, '2023-10-09', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(3, '2023-10-10', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(4, '2023-10-11', '08:20:00', '17:00:00', '00:20:00',<icons.IconChecklist />),
-  createData(5, '2023-10-12', '09:00:00', '17:00:00', '01:00:00',<icons.IconChecklist />),
-  createData(6, '2023-10-13', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(7, '2023-10-14', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(8, '2023-10-15', '08:20:00', '17:00:00', '00:20:00',<icons.IconChecklist />),
-  createData(9, '2023-10-16', '09:00:00', '17:00:00', '01:00:00',<icons.IconChecklist />),
-  createData(10, '2023-10-17', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(11, '2023-10-18', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(12, '2023-10-19', '08:20:00', '17:00:00', '00:20:00',<icons.IconChecklist />),
-  createData(13, '2023-10-20', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(14, '2023-10-21', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(15, '2023-10-22', '08:20:00', '17:00:00', '00:20:00',<icons.IconChecklist />),
-  createData(16, '2023-10-23', '09:00:00', '17:00:00', '01:00:00',<icons.IconChecklist />),
-  createData(17, '2023-10-24', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
+  createData(1, '2023-10-08', '09:00:00', '17:00:00', '01:00:00',<icons.IconDeviceFloppy />),
+  createData(2, '2023-10-09', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy/>),
+  createData(3, '2023-10-10', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy />),
+  createData(4, '2023-10-11', '08:20:00', '17:00:00', '00:20:00',<icons.IconDeviceFloppy />),
+  createData(5, '2023-10-12', '09:00:00', '17:00:00', '01:00:00',<icons.IconDeviceFloppy />),
+  createData(6, '2023-10-13', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy />),
+  createData(7, '2023-10-14', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy />),
+  createData(8, '2023-10-15', '08:20:00', '17:00:00', '00:20:00',<icons.IconDeviceFloppy />),
+  createData(9, '2023-10-16', '09:00:00', '17:00:00', '01:00:00',<icons.IconDeviceFloppy />),
+  createData(10, '2023-10-17', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy />),
+  createData(11, '2023-10-18', '08:00:00', '18:00:00', '00:00:00',<icons.IconDeviceFloppy />),
+  createData(12, '2023-10-19', '08:20:00', '17:00:00', '00:20:00',<icons.IconDeviceFloppy />),
+  createData(13, '2023-10-20', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy />),
+  createData(14, '2023-10-21', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy />),
+  createData(15, '2023-10-22', '08:20:00', '17:00:00', '00:20:00',<icons.IconDeviceFloppy />),
+  createData(16, '2023-10-23', '09:00:00', '17:00:00', '01:00:00',<icons.IconDeviceFloppy />),
+  createData(17, '2023-10-24', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy />),
 ];
 
 function TablaMarcaciones () {
@@ -79,7 +83,7 @@ function TablaMarcaciones () {
                     <StyledTableCell align="center">Entrada</StyledTableCell>
                     <StyledTableCell align="center">Salida</StyledTableCell>
                     <StyledTableCell align="center">Atraso</StyledTableCell>
-                    <StyledTableCell align="center">Justificación</StyledTableCell>
+                    <StyledTableCell align="center">Guardar</StyledTableCell>
                   </TableRow>
                   </TableHead>
                     <TableBody>{rows
@@ -88,8 +92,16 @@ function TablaMarcaciones () {
                       <StyledTableRow key={row.codigo}>
                         <StyledTableCell component="th" scope="row" align="center">{row.codigo}</StyledTableCell>
                         <StyledTableCell align="center">{row.fecha}</StyledTableCell>
-                        <StyledTableCell align="center">{row.entrada}</StyledTableCell>
-                        <StyledTableCell align="center">{row.salida}</StyledTableCell>
+                        <StyledTableCell align="center">
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <TimePicker defaultValue={dayjs(`${row.fecha}`+"T"+`${row.entrada}`)}/>
+                          </LocalizationProvider>
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <TimePicker defaultValue={dayjs(`${row.fecha}`+"T"+`${row.salida}`)}/>
+                          </LocalizationProvider>  
+                        </StyledTableCell>
                         <StyledTableCell align="center">{row.atraso}</StyledTableCell>
                         <StyledTableCell align="center">{row.justificacion}</StyledTableCell>
                       </StyledTableRow>

@@ -6,7 +6,7 @@ const Consultar = Loadable(lazy(() => import('views/administrador/consultar')));
 const Agregar = Loadable(lazy(() => import('views/administrador/agregar')));
 const AgregarUsuario = Loadable(lazy(() => import('views/administrador/usuario-agregar')));
 const Solicitudes = Loadable(lazy(() => import('views/administrador/solicitudes')));
-
+const Modificar = Loadable(lazy(() => import('views/administrador/modificar')));
 const MainRoutes = {
   path: '/administrador',
   element: <MainLayout />,
@@ -27,6 +27,10 @@ const MainRoutes = {
       path: 'solicitudes',
       element: <Solicitudes />
     },
+    {
+      path: 'modificar',
+      element: <Modificar />
+    }
   ]
 };
 

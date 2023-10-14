@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTheme, styled } from '@mui/material/styles';
-import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography, TextField, MenuItem, Grid, Button } from '@mui/material';
+import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography, Grid } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import ProfilePic from 'assets/images/picture-placeholder.jpg';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -40,12 +40,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const UserCard = () => {
   const theme = useTheme();
-  const workers = [
-    {
-      value: 'John Doe',
-      label: 'John Doe',
-    }
-  ];
+
   const monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
   let newDate = new Date()
   let month = newDate.getMonth();
@@ -57,27 +52,10 @@ const UserCard = () => {
         <CardWrapper border={false} content={false}>
           <Grid container spacing={2}>
             <Grid xs={8}>
-              <Box sx={{px:15, pt:9, pb:2}}>
-                <TextField
-                  id="outlined-select-worker"
-                  select
-                  defaultValue="John Doe"
-                  sx={{width: '50ch'}}
-                >
-                  {workers.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Box>
-              <Box sx={{px:15, py:0}} justifyContent="space-between" alignContent="center">
+              <Box sx={{px:15, pt:11, pb:2}} justifyContent="space-between" alignContent="center">
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
-                  <DatePicker views={['month', 'year']} defaultValue={dayjs(`${monthName}+" "+${year}`)} />
+                  <DatePicker views={['month', 'year']} value={dayjs(`${monthName}+" "+${year}`)} />
                 </LocalizationProvider>
-                <Button variant="contained" sx={{px:3, py:1 , mx:1, my:0.5, backgroundColor: theme.palette.success.dark}}>
-                  Publicar
-                </Button>
               </Box>
             </Grid>
             <Grid xs={4}>

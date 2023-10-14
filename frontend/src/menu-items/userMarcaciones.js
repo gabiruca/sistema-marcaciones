@@ -10,7 +10,7 @@ const userMarcaciones = {
       id: 'user-consultar',
       title: 'Consultar',
       type: 'item',
-      url: '/usuario/#',
+      url: '/usuario/consultar-user',
       icon: icons.IconVocabulary
     }
   ]

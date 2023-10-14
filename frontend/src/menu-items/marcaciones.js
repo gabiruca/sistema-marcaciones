@@ -24,7 +24,7 @@ const marcaciones = {
       id: 'modificar',
       title: 'Modificar',
       type: 'item',
-      url: '/administrador/#',
+      url: '/administrador/modificar',
       icon: icons.IconEdit
     }
   ]

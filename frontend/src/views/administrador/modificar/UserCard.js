@@ -75,8 +75,8 @@ const UserCard = () => {
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
                   <DatePicker views={['month', 'year']} defaultValue={dayjs(`${monthName}+" "+${year}`)} />
                 </LocalizationProvider>
-                <Button variant="contained" sx={{px:3, py:1 , mx:1, my:0.5, backgroundColor: theme.palette.success.dark}}>
-                  Publicar
+                <Button variant="contained" disabled sx={{px:3, py:1 , mx:1, my:0.5, backgroundColor: theme.palette.success.dark}}>
+                  Publicado
                 </Button>
               </Box>
             </Grid>
