@@ -8,8 +8,6 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import MainCard from 'ui-component/cards/MainCard';
-import { IconChecklist } from '@tabler/icons';
-const icons = {IconChecklist};
 import * as React from 'react';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -30,28 +28,28 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   }
 }));
 
-function createData(codigo, fecha, entrada, salida, atraso, justificacion) {
-  return { codigo, fecha, entrada, salida, atraso, justificacion };
+function createData(codigo, fecha, entrada, salida, atraso) {
+  return { codigo, fecha, entrada, salida, atraso };
 }
 
 const rows = [
-  createData(1, '2023-10-08', '09:00:00', '17:00:00', '01:00:00',<icons.IconChecklist />),
-  createData(2, '2023-10-09', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(3, '2023-10-10', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(4, '2023-10-11', '08:20:00', '17:00:00', '00:20:00',<icons.IconChecklist />),
-  createData(5, '2023-10-12', '09:00:00', '17:00:00', '01:00:00',<icons.IconChecklist />),
-  createData(6, '2023-10-13', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(7, '2023-10-14', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(8, '2023-10-15', '08:20:00', '17:00:00', '00:20:00',<icons.IconChecklist />),
-  createData(9, '2023-10-16', '09:00:00', '17:00:00', '01:00:00',<icons.IconChecklist />),
-  createData(10, '2023-10-17', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(11, '2023-10-18', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(12, '2023-10-19', '08:20:00', '17:00:00', '00:20:00',<icons.IconChecklist />),
-  createData(13, '2023-10-20', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(14, '2023-10-21', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(15, '2023-10-22', '08:20:00', '17:00:00', '00:20:00',<icons.IconChecklist />),
-  createData(16, '2023-10-23', '09:00:00', '17:00:00', '01:00:00',<icons.IconChecklist />),
-  createData(17, '2023-10-24', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
+  createData(1, '2023-10-08', '09:00:00', '17:00:00', '01:00:00'),
+  createData(2, '2023-10-09', '08:00:00', '17:00:00', '00:00:00'),
+  createData(3, '2023-10-10', '08:00:00', '17:00:00', '00:00:00'),
+  createData(4, '2023-10-11', '08:20:00', '17:00:00', '00:20:00'),
+  createData(5, '2023-10-12', '09:00:00', '17:00:00', '01:00:00'),
+  createData(6, '2023-10-13', '08:00:00', '17:00:00', '00:00:00'),
+  createData(7, '2023-10-14', '08:00:00', '17:00:00', '00:00:00'),
+  createData(8, '2023-10-15', '08:20:00', '17:00:00', '00:20:00'),
+  createData(9, '2023-10-16', '09:00:00', '17:00:00', '01:00:00'),
+  createData(10, '2023-10-17', '08:00:00', '17:00:00', '00:00:00'),
+  createData(11, '2023-10-18', '08:00:00', '17:00:00', '00:00:00'),
+  createData(12, '2023-10-19', '08:20:00', '17:00:00', '00:20:00'),
+  createData(13, '2023-10-20', '08:00:00', '17:00:00', '00:00:00'),
+  createData(14, '2023-10-21', '08:00:00', '17:00:00', '00:00:00'),
+  createData(15, '2023-10-22', '08:20:00', '17:00:00', '00:20:00'),
+  createData(16, '2023-10-23', '09:00:00', '17:00:00', '01:00:00'),
+  createData(17, '2023-10-24', '08:00:00', '17:00:00', '00:00:00'),
 ];
 
 function TablaMarcaciones () {
@@ -79,7 +77,6 @@ function TablaMarcaciones () {
                     <StyledTableCell align="center">Entrada</StyledTableCell>
                     <StyledTableCell align="center">Salida</StyledTableCell>
                     <StyledTableCell align="center">Atraso</StyledTableCell>
-                    <StyledTableCell align="center">Justificación</StyledTableCell>
                   </TableRow>
                   </TableHead>
                     <TableBody>{rows
@@ -91,7 +88,6 @@ function TablaMarcaciones () {
                         <StyledTableCell align="center">{row.entrada}</StyledTableCell>
                         <StyledTableCell align="center">{row.salida}</StyledTableCell>
                         <StyledTableCell align="center">{row.atraso}</StyledTableCell>
-                        <StyledTableCell align="center">{row.justificacion}</StyledTableCell>
                       </StyledTableRow>
                       ))}
                     </TableBody>

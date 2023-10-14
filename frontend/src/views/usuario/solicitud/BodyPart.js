@@ -49,7 +49,7 @@ const BodyPart = () => {
             <Grid item xs={12}>
                 <Box alignContent="center" justifyContent="space-between" sx={{m:5}}>
                   <span className='tags-names'>Fecha</span>
-                  <input type="text" value="2023-09-20" disabled/>
+                  <TextField disabled sx={{width: '25ch',mx:6.5, mt:-2}} value="2023-09-20"/>
                 </Box>
                 <Box alignContent="center" justifyContent="space-between" sx={{m:5}}>
                   <span className='tags-names'>Tipo</span>

@@ -32,6 +32,10 @@ const FirebaseLogin = ({ ...others }) => {
     event.preventDefault();
   };
 
+  const handleLogin =()=>{
+    window.location.href = '/administrador/consultar'
+  }
+
   return (
     <>
       <Grid container direction="column" justifyContent="center" spacing={2}>
@@ -126,7 +130,7 @@ const FirebaseLogin = ({ ...others }) => {
             <Box sx={{ mt: 2 }}>
               <Stack alignItems="center" color={theme.palette.background.paper}>
                 <AnimateButton>
-                  <Button disabled={isSubmitting} size="large" type="submit" variant="contained" color="primary" >
+                  <Button disabled={isSubmitting} size="large" type="submit" variant="contained" color="primary" onClick={handleLogin}>
                     Ingresar
                   </Button>
                 </AnimateButton>

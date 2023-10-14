@@ -5,6 +5,7 @@ import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
 import ProfilePic from 'assets/images/picture-placeholder.jpg';
 import { useState } from 'react';
+import { IconDeviceFloppy } from '@tabler/icons';
 import './styles.css';
 
 const BodyPart = () => {
@@ -70,6 +71,9 @@ const BodyPart = () => {
                 </Button>
               </Item>
             </Stack>
+            <Button variant="contained" sx={{m:20}}>
+              <IconDeviceFloppy/> Registrar usuario
+            </Button>
             </Grid>
           </Grid>
         </MainCard>

@@ -22,7 +22,7 @@ const BodyPart = () => {
                     <div className="file-upload">
                       <IconFileUpload />
                       <h3>Seleccionar archivo</h3>
-                      <input type="file"  onChange={e => setArchivo(e.target.value)}/>
+                      <input type="file" accept=".xls, .csv, .xlsm, .xlsx, .xlsb" onChange={e => setArchivo(e.target.value)}/>
                     </div>
                   </div>
                 </div>
