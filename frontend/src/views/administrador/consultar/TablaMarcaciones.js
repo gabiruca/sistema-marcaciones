@@ -53,6 +53,7 @@ const rows = [
 ];
 
 function TablaMarcaciones () {
+  console.log(localStorage.getItem("idUser"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 

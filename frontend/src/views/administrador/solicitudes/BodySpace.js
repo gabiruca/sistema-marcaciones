@@ -51,11 +51,13 @@ const BodySpace = () => {
                   <ListItemText>
                     <Box sx={{m:3, p:0}}>
                       <Typography variant="h3" gutterBottom >
-                        John Doe - Solicitud de justificación de falta
+                        John Doe
                       </Typography>
                       <Box sx={{p: 1}}>
-                        <span>Fecha:</span><span> 2023-02-13</span>
-                        <Button variant="contained" sx={{px:3, py:1 , mx:50, my:0.5, backgroundColor: theme.palette.success.dark}} onClick={handleClickOpenA}>
+                        <Box sx={{mt: 3, fontSize:20}}>
+                          <Typography variant="body">Fecha: 2023-02-20</Typography>
+                        </Box>
+                        <Button variant="contained" sx={{px:3, py:1 , mx:43, mt:-5, backgroundColor: theme.palette.success.dark}} onClick={handleClickOpenA}>
                           Aceptar
                         </Button>
                         <Dialog
@@ -81,8 +83,10 @@ const BodySpace = () => {
                         </Dialog>
                       </Box>
                       <Box sx={{p: 1}}>
-                        <span>Jutificación:</span><span> Asunto familiar</span>
-                        <Button variant="contained" sx={{px:3, py:1 , mx:43.5, my:0.5, backgroundColor: theme.palette.error.main}} onClick={handleClickOpenN}>
+                        <Box sx={{mt: 3, fontSize:20}}>
+                          <Typography variant="body">Descripción: Atraso - Cita médica</Typography>
+                        </Box>
+                        <Button variant="contained" sx={{px:3, py:1 , mx:43.5, mt:-5, backgroundColor: theme.palette.error.main}} onClick={handleClickOpenN}>
                           Negar
                         </Button>
                         <Dialog
@@ -108,6 +112,9 @@ const BodySpace = () => {
                         </Dialog>
                       </Box>
                     </Box>
+                      <Box sx={{mt: 3,mx:4, fontSize:20}}>
+                        <Typography variant="body">Estado: Pendiente</Typography>
+                      </Box>
                   </ListItemText>
                 </ListItem>
               </List>

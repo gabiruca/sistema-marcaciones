@@ -13,13 +13,13 @@ const marcaciones = {
       url: '/administrador/agregar',
       icon: icons.IconCirclePlus
     },
-    {
+    /*{
       id: 'consultar',
       title: 'Consultar',
       type: 'item',
       url: '/administrador/consultar',
       icon: icons.IconVocabulary
-    },
+    },*/
     {
       id: 'modificar',
       title: 'Modificar',

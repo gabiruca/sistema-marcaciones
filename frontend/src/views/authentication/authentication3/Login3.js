@@ -1,14 +1,8 @@
-// material-ui
 import { Grid, Stack } from '@mui/material';
-
-// project imports
 import AuthWrapper1 from '../AuthWrapper1';
 import AuthCardWrapper from '../AuthCardWrapper';
 import AuthLogin from '../auth-forms/AuthLogin';
 import rutaImg from 'assets/images/logo-micabal-noback.png';
-// assets
-
-// ================================|| AUTH3 - LOGIN ||================================ //
 
 const Login = () => {
   

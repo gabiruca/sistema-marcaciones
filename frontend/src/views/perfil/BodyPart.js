@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { Grid,Typography, Button } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
@@ -8,12 +8,15 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import axios from "axios";
+import { HOST } from "hooks/variables";
 
 import './styles.css';
 
 const BodyPart = () => {
-  const [open, setOpen] = React.useState(false);
-  
+  const [open, setOpen] = useState(false);
+  const [datos, setDatos] = useState('');
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -22,6 +25,28 @@ const BodyPart = () => {
     setOpen(false);
   };
 
+  function getInfoWorker(cedula){
+    axios
+    .request({
+      method: "GET",
+      url: `${HOST}api/informacionUsuario/${cedula}`,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        setDatos(data.data);
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+    });
+  }
+
+  useEffect(() => {
+    getInfoWorker(localStorage.getItem("Cedula"));
+  }, []);
+
   return (
     <>
         <MainCard>
@@ -29,29 +54,29 @@ const BodyPart = () => {
             <Grid item xs={12}>
               <div id="profile-head">
                 <img id="profile" src={ProfilePic} alt="profile" />
-                <Typography variant="h2" id="name">Administrador</Typography>
+                <Typography variant="h2" id="name">{datos.Nombres + " "}{datos.Apellidos}</Typography>
               </div>
             </Grid>
             <Grid item xs={6}>
               <div className='div-class'>
                 <Typography variant='h4'>Cédula</Typography>
-                <p className='tags-names'>1234567890</p>
+                <p className='tags-names'>{datos.Cedula}</p>
               </div>
               <div className='div-class'>
                 <Typography variant='h4'>Correo</Typography>
-                <p className='tags-names'>admin@example.com</p>
+                <p className='tags-names'>{datos.Correo}</p>
               </div>
               <div className='div-class'>
                 <Typography variant='h4'>Fecha de nacimiento</Typography>
-                <p className='tags-names'>1980/10/09</p>
+                <p className='tags-names'>{datos.Nacimiento}</p>
               </div>
               <div className='div-class'>
                 <Typography variant='h4'>Fecha de contrato</Typography>
-                <p className='tags-names'>2023/02/23</p>
+                <p className='tags-names'>{datos.Contrato}</p>
               </div>
               <div className='div-class'>
                 <Typography variant='h4'>Género</Typography>
-                <p className='tags-names'>Femenino</p>
+                <p className='tags-names'>{datos.Genero}</p>
               </div>
             </Grid>
             <Grid item alignContent="center" justifyContent="space-between" xs={6}>

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography, Grid } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
@@ -8,6 +8,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
+import axios from "axios";
+import { HOST } from "hooks/variables";
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   overflow: 'hidden',
@@ -47,6 +49,32 @@ const UserCard = () => {
   let monthName = monthNames[month];
   let year = newDate.getFullYear();
 
+  const [nombre, setNombre]=useState('');
+  const [apellido, setApellido]=useState('');
+
+  function getInfoWorker(cedula){
+    axios
+    .request({
+      method: "GET",
+      url: `${HOST}api/informacionUsuario/${cedula}`,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        setApellido(data.data.Apellidos);
+        setNombre(data.data.Nombres);
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+    });
+  }
+
+  useEffect(() => {
+    getInfoWorker(localStorage.getItem("Cedula"));
+  }, []);
+
   return (
     <>
         <CardWrapper border={false} content={false}>
@@ -68,7 +96,7 @@ const UserCard = () => {
                         mt: 0.45,
                         mb: 0.45
                       }}
-                      primary={<Typography variant="h2">John Doe</Typography>}
+                      primary={<Typography variant="h2">{nombre + " "}{apellido}</Typography>}
                       secondary={
                         <Typography
                           variant="subtitle1"
@@ -77,7 +105,7 @@ const UserCard = () => {
                             mt: 0.5
                           }}
                         >
-                          CI: 0123456789
+                          CI: {localStorage.getItem('Cedula')}
                         </Typography>
                       }
                     />

@@ -10,7 +10,7 @@ const Modificar = Loadable(lazy(() => import('views/administrador/modificar')));
 
 const MainRoutes = {
   path: '/administrador',
-  element: <MainLayout />,
+  element: <MainLayout/>,
   children: [
     {
       path: 'agregar',

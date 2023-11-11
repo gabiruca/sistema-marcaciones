@@ -13,7 +13,12 @@
 [Link a protopipo](https://www.figma.com/file/YlLpmKhGvIb19d51LiIaaW/marcaciones?type=design&node-id=30%3A308&mode=design&t=eRhdJG6aTQfAfdWJ-1)
 ## Requerimientos
   * React
+  * Python
   * 
+
+## Comandos para ejecutar el proyecto en local
+  - Frontend: npm start
+  - Backend: python manage.py runserver
 ### Plantilla
 [Plantilla berry-free-react-admin-template](https://github.com/codedthemes/berry-free-react-admin-template.git)
 

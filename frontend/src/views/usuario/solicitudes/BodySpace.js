@@ -3,7 +3,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
-import { Grid,Typography, Box } from '@mui/material';
+import { Grid,Typography, Box, Button } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
 
@@ -17,28 +17,33 @@ const BodySpace = () => {
         <MainCard>
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
-                      <Typography variant="h2" gutterBottom>
-                          Solicitudes enviadas
+                <Typography variant="h2" gutterBottom>
+                  Solicitudes enviadas
+                </Typography>
+                <Divider />
+                <List sx={style} component="nav" aria-label="mailbox folders">
+                  <ListItem>
+                    <ListItemText>
+                      <Typography variant="h3" gutterBottom >
+                        Fecha: 2023-02-20
                       </Typography>
-                      <Divider />
-                      <List sx={style} component="nav" aria-label="mailbox folders">
-                        <ListItem>
-                          <ListItemText>
-                            <Typography variant="h3" gutterBottom >
-                              John Doe - Solicitud de justificación de atraso
-                            </Typography>
-                            <Box sx={{p: 1}}>
-                              <span>Fecha:</span><span> 2023-02-20</span>
-                            </Box>
-                            <Box sx={{p: 1}}>
-                              <span>Jutificación:</span><span> Cita médica</span>
-                            </Box>
-                          </ListItemText>
-                        </ListItem>
-                        <Divider />
-                      </List>
+                      <Box sx={{mt: 4, fontSize:20}}>
+                        <Typography variant="body">Descripción: Atraso - Cita médica</Typography>
+                      </Box>
+                      <Box sx={{mt: 4, fontSize:20}}>
+                        <Typography variant="body">Estado: Pendiente</Typography>
+                      </Box>
+                    </ListItemText>
+                  </ListItem>
+                </List>
+                <Divider />
             </Grid>
           </Grid>
+          <Box textAlign="center">
+            <Button sx={{mt:4}} variant='contained' href='/usuario/enviar-solicitud'>
+              Nueva solicitud
+            </Button>
+          </Box>
         </MainCard>
     </>
   );

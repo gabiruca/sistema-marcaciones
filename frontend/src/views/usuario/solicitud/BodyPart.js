@@ -9,6 +9,11 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import './styles.css';
 import { IconSend } from '@tabler/icons';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
 
 const BodyPart = () => {
   const [open, setOpen] = React.useState(false);
@@ -22,6 +27,8 @@ const BodyPart = () => {
       label: 'Atraso',
     }
   ];
+
+  let newDate = new Date();
 
   const motivos = [
     {
@@ -41,6 +48,10 @@ const BodyPart = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  
+  const goBack =() =>{
+    history.back()
+  }
 
   return (
     <>
@@ -49,7 +60,11 @@ const BodyPart = () => {
             <Grid item xs={12}>
                 <Box alignContent="center" justifyContent="space-between" sx={{m:5}}>
                   <span className='tags-names'>Fecha</span>
-                  <TextField disabled sx={{width: '25ch',mx:6.5, mt:-2}} value="2023-09-20"/>
+                  <Box sx={{mx:12, mt: -4, width:'25ch'}}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
+                      <DatePicker views={['day','month', 'year']} defaultValue={dayjs(`${newDate}`)} />
+                    </LocalizationProvider>
+                  </Box>
                 </Box>
                 <Box alignContent="center" justifyContent="space-between" sx={{m:5}}>
                   <span className='tags-names'>Tipo</span>
@@ -81,8 +96,9 @@ const BodyPart = () => {
                     ))}
                   </TextField>
                 </Box>
-                <Box alignContent="center" sx={{m:5}}>
-                  <Button variant='contained' onClick={handleClickOpen}><IconSend />  Enviar solicitud</Button>
+                <Box alignContent="center" sx={{m:5}} >
+                  <Button sx={{ml:25}} variant='contained' onClick={handleClickOpen}><IconSend />  Enviar solicitud</Button>
+                  <Button sx={{ml:10}} variant='contained' onClick={goBack}>Cancelar</Button>
                   <Dialog
                     open={open}
                     onClose={handleClose}

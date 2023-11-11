@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import {
   Box,
@@ -9,8 +9,9 @@ import {
   Grid,
   IconButton,
   InputAdornment,
-  InputLabel,
-  OutlinedInput
+  OutlinedInput,
+  Typography,
+  Alert,
 } from '@mui/material';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -18,12 +19,20 @@ import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import axios from "axios";
+import { HOST } from "hooks/variables";
 
-const FirebaseLogin = ({ ...others }) => {
+const Login = ({ ...others }) => {
+
+  const phoneRegExp = /^\d{10}/
   const theme = useTheme();
   const scriptedRef = useScriptRef();
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [autorizado,setAutorizado]=useState(false);
+  const [alerta,setAlerta]=useState(false);
+  const [showPassword,setShowPassword] = useState(false);
+  const [rol,setRol]=useState('');
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -32,26 +41,93 @@ const FirebaseLogin = ({ ...others }) => {
     event.preventDefault();
   };
 
-  const handleLogin =()=>{
-    window.location.href = '/administrador/consultar'
+  const timeout = setTimeout(() => {
+    setAlerta(false);
+  }, 5000);
+
+
+  function getTipoUsuario(cedula){
+    localStorage.setItem("Cedula",cedula)
+    axios
+    .request({
+      method: "GET",
+      url: `${HOST}api/tipoUsuario/${cedula}`,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        setAutorizado(true);
+        setRol(data.data.Rol);
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+    });
   }
+
+  function validarLogin(cedula,passw){
+    axios
+    .request({
+      method: "GET",
+      url: `${HOST}api/validateLogin/${cedula}/${passw}`,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        getTipoUsuario(data.data.Cedula);
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        setAlerta(true);
+      }
+    });
+  }
+
+
+  const handleLogin = async(cedula,pass)=>{
+    validarLogin(cedula,pass)
+  }
+
+  useEffect(() => {
+    localStorage.setItem("Rol",rol)
+    console.log(localStorage.getItem("Cedula"))
+    if(autorizado){
+      if(rol=='ADMIN'){
+        window.location.href = '/administrador/modificar';
+      }else if(rol=='USER'){
+        window.location.href = '/usuario/consultar-user';
+      }
+    }
+  }, [autorizado]);
+
+  useEffect(() => {
+    if(alerta){
+      timeout
+    }
+  }, [alerta]);
+
+  useEffect(() => {
+    
+  }, []);
 
   return (
     <>
       <Grid container direction="column" justifyContent="center" spacing={2}>
         <Grid item xs={12} container alignItems="center" justifyContent="center">
+
         </Grid>
       </Grid>
 
       <Formik
         initialValues={{
-          email: '0123456789',
-          password: 'password',
+          cedula: '',
+          password: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email('La cédula es incorrecta').max(255).required('Ingrese el número de cédula'),
-          password: Yup.string().max(255).required('Ingrese la contraseña')
+          cedula: Yup.string().matches(phoneRegExp, 'Cédula no válida').max(10, 'La cédula debe tener únicamente 10 dígitos').required('Ingrese el número de cédula'),
+          password: Yup.string().max(50).required('Ingrese la contraseña')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
@@ -60,7 +136,6 @@ const FirebaseLogin = ({ ...others }) => {
               setSubmitting(false);
             }
           } catch (err) {
-            console.error(err);
             if (scriptedRef.current) {
               setStatus({ success: false });
               setErrors({ submit: err.message });
@@ -71,27 +146,26 @@ const FirebaseLogin = ({ ...others }) => {
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit} {...others}>
-            <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
-              <InputLabel htmlFor="outlined-adornment-email-login">Cédula</InputLabel>
+            <FormControl fullWidth error={Boolean(touched.cedula && errors.cedula)} sx={{ ...theme.typography.customInput }}>
+              <Typography variant="body1"sx={{mx:1}}>Cédula</Typography>
               <OutlinedInput
                 id="outlined-adornment-email-login"
-                type="number"
-                value={values.email}
-                name="email"
+                type="cedula"
+                value={values.cedula}
+                name="cedula"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                label="email"
+                label="cedula"
                 inputProps={{}}
               />
-              {touched.email && errors.email && (
+              {touched.cedula && errors.cedula && (
                 <FormHelperText error id="standard-weight-helper-text-email-login">
-                  {errors.email}
+                  {errors.cedula}
                 </FormHelperText>
               )}
             </FormControl>
-
             <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ ...theme.typography.customInput }}>
-              <InputLabel htmlFor="outlined-adornment-password-login">Contraseña</InputLabel>
+              <Typography variant="body1"sx={{mx:1}}>Contraseña</Typography>
               <OutlinedInput
                 id="outlined-adornment-password-login"
                 type={showPassword ? 'text' : 'password'}
@@ -126,11 +200,10 @@ const FirebaseLogin = ({ ...others }) => {
                 <FormHelperText error>{errors.submit}</FormHelperText>
               </Box>
             )}
-
             <Box sx={{ mt: 2 }}>
               <Stack alignItems="center" color={theme.palette.background.paper}>
                 <AnimateButton>
-                  <Button disabled={isSubmitting} size="large" type="submit" variant="contained" color="primary" onClick={handleLogin}>
+                  <Button disabled={isSubmitting} size="large" type="submit" variant="contained" color="primary" onClick={()=>handleLogin(values.cedula,values.password)}>
                     Ingresar
                   </Button>
                 </AnimateButton>
@@ -140,8 +213,11 @@ const FirebaseLogin = ({ ...others }) => {
 
         )}
       </Formik>
+      {alerta ?
+        <Alert sx={{mt:1.5}} severity="error"> El número de cédula o la constraseñas están incorrectos.</Alert>
+      : <Box sx={{m:7.6}} />}
     </>
   );
 };
 
-export default FirebaseLogin;
+export default Login;

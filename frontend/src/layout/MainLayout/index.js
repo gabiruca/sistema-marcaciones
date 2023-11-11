@@ -1,11 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet } from 'react-router-dom';
-
-// material-ui
+import { Outlet,useLocation } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import { AppBar, Box, CssBaseline, Toolbar, useMediaQuery } from '@mui/material';
-
-// project imports
 import Breadcrumbs from 'ui-component/extended/Breadcrumbs';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -13,8 +9,6 @@ import Customization from '../Customization';
 import navigation from 'menu-items';
 import { drawerWidth } from 'store/constant';
 import { SET_MENU } from 'store/actions';
-
-// assets
 import { IconChevronRight } from '@tabler/icons';
 
 // styles
@@ -51,12 +45,14 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
   }
 }));
 
-// ==============================|| MAIN LAYOUT ||============================== //
 
 const MainLayout = () => {
+  let location = useLocation();
+  let rutas = location.pathname.split("/")
+  let nombreSeccion = rutas[(rutas.length)-1]
+  nombreSeccion = nombreSeccion.replace("-"," ").replace(" user","")
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
-  // Handle left drawer
   const leftDrawerOpened = useSelector((state) => state.customization.opened);
   const dispatch = useDispatch();
   const handleLeftDrawerToggle = () => {
@@ -66,7 +62,6 @@ const MainLayout = () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      {/* header */}
       <AppBar
         enableColorOnDark
         position="fixed"
@@ -78,7 +73,7 @@ const MainLayout = () => {
         }}
       >
         <Toolbar>
-          <Header handleLeftDrawerToggle={handleLeftDrawerToggle}/>
+          <Header handleLeftDrawerToggle={handleLeftDrawerToggle} seccionName={nombreSeccion.charAt(0).toUpperCase() + nombreSeccion.slice(1)}/>
         </Toolbar>
       </AppBar>
 

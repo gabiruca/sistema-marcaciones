@@ -3,6 +3,11 @@ import { useTheme, styled } from '@mui/material/styles';
 import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography, TextField, MenuItem, Grid, Button } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import ProfilePic from 'assets/images/picture-placeholder.jpg';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -39,6 +44,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 
 const UserCard = () => {
+  const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const workers = [
     {
@@ -52,6 +58,12 @@ const UserCard = () => {
   let monthName = monthNames[month];
   let year = newDate.getFullYear();
 
+  const handleClick =()=>{
+    setOpen(true);
+  };
+  const handleClose =()=>{
+    setOpen(false);
+  };
   return (
     <>
         <CardWrapper border={false} content={false}>
@@ -75,9 +87,28 @@ const UserCard = () => {
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
                   <DatePicker views={['month', 'year']} defaultValue={dayjs(`${monthName}+" "+${year}`)} />
                 </LocalizationProvider>
-                <Button variant="contained" sx={{px:3, py:1 , mx:1, my:0.5, backgroundColor: theme.palette.success.dark}}>
+                <Button variant="contained" sx={{px:3, py:1 , mx:1, my:0.5, backgroundColor: theme.palette.success.dark}} onClick={handleClick}>
                   Publicar
                 </Button>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title" fontSize="large">
+                      {"Publicar marcaciones"}
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description" color="text">
+                        ¿Está seguro de que desea publicar las marcaciones correspondientes al mes de octubre?
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleClose}>Cancelar</Button>
+                      <Button onClick={handleClose} autoFocus>Publicar</Button>
+                    </DialogActions>
+                </Dialog>
               </Box>
             </Grid>
             <Grid xs={4}>

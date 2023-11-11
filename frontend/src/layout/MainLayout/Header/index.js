@@ -5,12 +5,11 @@ import ProfileSection from './ProfileSection';
 import { IconMenu2 } from '@tabler/icons';
 import rutaImg from 'assets/images/logo-micabal-noback.png';
 
-const Header = ({ handleLeftDrawerToggle }) => {
+const Header = ({ handleLeftDrawerToggle,seccionName }) => {
   const theme = useTheme();
 
   return (
     <>
-      {/* logo & toggler button */}
       <Box
         sx={{
           width: 228,
@@ -45,7 +44,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
       <Box sx={{ flexGrow: 1 }} />
       
       <Box sx={{mt:1.5}}>
-        <h1>Nombre de sección</h1>
+        <h1>{seccionName}</h1>
       </Box>
       <Box sx={{ flexGrow: 1 }} />
 
@@ -55,7 +54,8 @@ const Header = ({ handleLeftDrawerToggle }) => {
 };
 
 Header.propTypes = {
-  handleLeftDrawerToggle: PropTypes.func
+  handleLeftDrawerToggle: PropTypes.func,
+  seccionName: PropTypes.func
 };
 
 export default Header;

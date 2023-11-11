@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,11 +10,18 @@ import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import MainCard from 'ui-component/cards/MainCard';
 import { IconDeviceFloppy } from '@tabler/icons';
-const icons = {IconDeviceFloppy};
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from 'dayjs';
+import Button from '@mui/material/Button';
+import axios from "axios";
+import { HOST } from "hooks/variables";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -34,33 +41,47 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   }
 }));
 
+const rows = []
+
 function createData(codigo, fecha, entrada, salida, atraso, justificacion) {
   return { codigo, fecha, entrada, salida, atraso, justificacion };
 }
+  
+  function dataRows(data){
+    for(var i=0;i<data.length;i++){
+      let registro=data[i]
+      let row=createData(i+1,registro[0],registro[1],registro[2],registro[3],<IconDeviceFloppy/>)
+      rows.push(row)
+    }
+  }
 
-const rows = [
-  createData(1, '2023-10-08', '09:00:00', '17:00:00', '01:00:00',<icons.IconDeviceFloppy />),
-  createData(2, '2023-10-09', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy/>),
-  createData(3, '2023-10-10', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy />),
-  createData(4, '2023-10-11', '08:20:00', '17:00:00', '00:20:00',<icons.IconDeviceFloppy />),
-  createData(5, '2023-10-12', '09:00:00', '17:00:00', '01:00:00',<icons.IconDeviceFloppy />),
-  createData(6, '2023-10-13', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy />),
-  createData(7, '2023-10-14', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy />),
-  createData(8, '2023-10-15', '08:20:00', '17:00:00', '00:20:00',<icons.IconDeviceFloppy />),
-  createData(9, '2023-10-16', '09:00:00', '17:00:00', '01:00:00',<icons.IconDeviceFloppy />),
-  createData(10, '2023-10-17', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy />),
-  createData(11, '2023-10-18', '08:00:00', '18:00:00', '00:00:00',<icons.IconDeviceFloppy />),
-  createData(12, '2023-10-19', '08:20:00', '17:00:00', '00:20:00',<icons.IconDeviceFloppy />),
-  createData(13, '2023-10-20', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy />),
-  createData(14, '2023-10-21', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy />),
-  createData(15, '2023-10-22', '08:20:00', '17:00:00', '00:20:00',<icons.IconDeviceFloppy />),
-  createData(16, '2023-10-23', '09:00:00', '17:00:00', '01:00:00',<icons.IconDeviceFloppy />),
-  createData(17, '2023-10-24', '08:00:00', '17:00:00', '00:00:00',<icons.IconDeviceFloppy />),
-];
+  function getTablaData(cedula,mes,year){
+    axios
+    .request({
+      method: "GET",
+      url: `${HOST}api/cargarTablaAdmin/${cedula}/${mes}/${year}`,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        dataRows(data.data.Marcas)
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+    });
+  }
 
 function TablaMarcaciones () {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [open, setOpen]= useState(false);
+
+  useEffect(() => {
+    getTablaData(localStorage.getItem("CedulaWorker"),"09","2023");
+    console.log("AJa",rows)
+  }, [localStorage.getItem("CedulaWorker")]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -71,6 +92,12 @@ function TablaMarcaciones () {
     setPage(0);
   };
 
+  const handleClick=()=>{
+    setOpen(true);
+  };
+  const handleClose=()=>{
+    setOpen(false);
+  };
   return (
     <>
         <MainCard>
@@ -103,7 +130,30 @@ function TablaMarcaciones () {
                           </LocalizationProvider>  
                         </StyledTableCell>
                         <StyledTableCell align="center">{row.atraso}</StyledTableCell>
-                        <StyledTableCell align="center">{row.justificacion}</StyledTableCell>
+                        <StyledTableCell align="center">
+                          <Button onClick={handleClick}>
+                            <IconDeviceFloppy/>
+                          </Button>
+                          <Dialog
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                          >
+                            <DialogTitle id="alert-dialog-title" fontSize="large">
+                              {"Modificar horario"}
+                            </DialogTitle>
+                            <DialogContent>
+                              <DialogContentText id="alert-dialog-description" color="text">
+                                ¿Está seguro de que desea modificar este horario?
+                              </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                              <Button onClick={handleClose}>Cancelar</Button>
+                              <Button onClick={handleClose} autoFocus>Modificar</Button>
+                            </DialogActions>
+                        </Dialog>
+                        </StyledTableCell>
                       </StyledTableRow>
                       ))}
                     </TableBody>
