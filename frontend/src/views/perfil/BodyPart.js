@@ -16,12 +16,22 @@ import './styles.css';
 const BodyPart = () => {
   const [open, setOpen] = useState(false);
   const [datos, setDatos] = useState('');
+  const [pass, setPass] = useState ('');
+  const [newpass, setNewpass] = useState ('');
+  const form_data = new FormData();
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleCloseYes = () => {
+    form_data.append('old',pass);
+    form_data.append('new',newpass);
+    changePass(localStorage.getItem("Cedula"));
     setOpen(false);
   };
 
@@ -42,10 +52,32 @@ const BodyPart = () => {
       }
     });
   }
+  
+  function changePass(cedula){
+    axios
+    .request({
+      method: "POST",
+      url: `${HOST}api/newPassword/${cedula}`,
+      data: form_data,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        setDatos(data.data);
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+    });
+  }
 
   useEffect(() => {
     getInfoWorker(localStorage.getItem("Cedula"));
   }, []);
+  useEffect(() => {
+    getInfoWorker(localStorage.getItem("Cedula"));
+  }, [open]);
 
   return (
     <>
@@ -82,12 +114,12 @@ const BodyPart = () => {
             <Grid item alignContent="center" justifyContent="space-between" xs={6}>
               <div className='div-class'>
                 <Typography variant='h4'>Contraseña actual</Typography>
-                <input type="password" defaultValue="passwordOld"/>
+                <input type="password" value={pass} onChange={event => {setPass(event.target.value);}}/>
                 
               </div>
               <div className='div-class'>
                 <Typography variant='h4'>Contraseña nueva</Typography>
-                <input type="password" defaultValue="passwordNueva"/>
+                <input type="password" value={newpass} onChange={event => {setNewpass(event.target.value);}}/>
                 
               </div>
               <div className='div-class'>
@@ -108,7 +140,7 @@ const BodyPart = () => {
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleClose}>Cancelar</Button>
-                    <Button onClick={handleClose} autoFocus>
+                    <Button onClick={handleCloseYes} autoFocus>
                       Actualizar
                     </Button>
                   </DialogActions>

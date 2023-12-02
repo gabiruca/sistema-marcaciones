@@ -10,8 +10,10 @@ import TablePagination from '@mui/material/TablePagination';
 import Button from '@mui/material/Button';
 import MainCard from 'ui-component/cards/MainCard';
 import { IconChecklist } from '@tabler/icons';
-const icons = {IconChecklist};
 import * as React from 'react';
+import axios from "axios";
+import { HOST } from "hooks/variables";
+import { useState} from 'react';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -31,37 +33,51 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   }
 }));
 
-const handleClick =()=>{
-  window.location.href = '/usuario/enviar-solicitud'
-}
-
-function createData(codigo, fecha, entrada, salida, atraso, justificacion) {
-  return { codigo, fecha, entrada, salida, atraso, justificacion };
-}
-
-const rows = [
-  createData(1, '2023-10-08', '09:00:00', '17:00:00', '01:00:00',<icons.IconChecklist />),
-  createData(2, '2023-10-09', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(3, '2023-10-10', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(4, '2023-10-11', '08:20:00', '17:00:00', '00:20:00',<icons.IconChecklist />),
-  createData(5, '2023-10-12', '09:00:00', '17:00:00', '01:00:00',<icons.IconChecklist />),
-  createData(6, '2023-10-13', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(7, '2023-10-14', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(8, '2023-10-15', '08:20:00', '17:00:00', '00:20:00',<icons.IconChecklist />),
-  createData(9, '2023-10-16', '09:00:00', '17:00:00', '01:00:00',<icons.IconChecklist />),
-  createData(10, '2023-10-17', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(11, '2023-10-18', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(12, '2023-10-19', '08:20:00', '17:00:00', '00:20:00',<icons.IconChecklist />),
-  createData(13, '2023-10-20', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(14, '2023-10-21', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-  createData(15, '2023-10-22', '08:20:00', '17:00:00', '00:20:00',<icons.IconChecklist />),
-  createData(16, '2023-10-23', '09:00:00', '17:00:00', '01:00:00',<icons.IconChecklist />),
-  createData(17, '2023-10-24', '08:00:00', '17:00:00', '00:00:00',<icons.IconChecklist />),
-];
 
 function TablaMarcaciones () {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rows,setRows]=useState([]);
+
+  function createData(codigo, fecha, entrada, salida, atraso, justificacion) {
+    return { codigo, fecha, entrada, salida, atraso, justificacion };
+  }
+
+  function dataRows(data){
+    let rowsF=[]
+    for(var i=0;i<data.length;i++){
+      let registro=data[i]
+      let row=createData(i+1,registro[0],registro[1],registro[2],registro[3],<IconChecklist/>)
+      rowsF.push(row)
+    }
+    setRows(rowsF)
+  }
+
+  function getTablaData(cedula,mes,year){
+    if(mes.length==1){
+      mes='0'+mes
+    }
+    axios
+    .request({
+      method: "GET",
+      url: `${HOST}api/cargarTabla/${cedula}/${mes}/${year}`,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        dataRows(data.data.Marcas)
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+    });
+  }
+
+  const handleRef=()=>{
+    getTablaData(localStorage.getItem("Cedula"),localStorage.getItem("mes").toString(),localStorage.getItem("year").toString());
+    console.log("AJa",rows)
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -76,6 +92,9 @@ function TablaMarcaciones () {
     <>
         <MainCard>
             <TableContainer component={Paper}>
+              <Button variant="contained" sx={{px:3, py:1 , my:1.5}} onClick={handleRef}>
+                Ver marcaciones
+              </Button>
               <Table sx={{ minWidth: 700, border: 2 }} aria-label="customized table">
                 <TableHead>
                   <TableRow>
@@ -92,11 +111,11 @@ function TablaMarcaciones () {
                       .map((row) => (
                       <StyledTableRow key={row.codigo}>
                         <StyledTableCell component="th" scope="row" align="center">{row.codigo}</StyledTableCell>
-                        <StyledTableCell align="center">{row.fecha}</StyledTableCell>
+                        <StyledTableCell align="center" >{row.fecha}</StyledTableCell>
                         <StyledTableCell align="center">{row.entrada}</StyledTableCell>
                         <StyledTableCell align="center">{row.salida}</StyledTableCell>
                         <StyledTableCell align="center">{row.atraso}</StyledTableCell>
-                        <StyledTableCell align="center"><Button onClick={handleClick}>{row.justificacion}</Button></StyledTableCell>
+                        <StyledTableCell align="center"><Button onClick={()=>(localStorage.setItem("fecha-solicitud",row.fecha),window.location.href = '/usuario/enviar-solicitud')}>{row.justificacion}</Button></StyledTableCell>
                       </StyledTableRow>
                       ))}
                     </TableBody>

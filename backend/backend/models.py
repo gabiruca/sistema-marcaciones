@@ -32,8 +32,8 @@ class Marcacion(models.Model):
 class TipoJustificacion(models.Model):
     idTipo = models.AutoField(blank=False,null=False,primary_key=True)
     descripcion = models.CharField(max_length=500)
-    usuarioModificador = models.ForeignKey(
-        Usuario, models.DO_NOTHING, db_column='cedula')
+    codigoBiometrico = models.ForeignKey(
+        Usuario, models.DO_NOTHING, db_column='codigoBiometrico',blank=False,null=False)
     fechaIngreso = models.DateField()
     fechaUltimaModificacion = models.DateField()
 

@@ -5,6 +5,8 @@ import Loadable from 'ui-component/Loadable';
 const ConsultarUser = Loadable(lazy(() => import('views/usuario/consultar')));
 const SolicitudesUser = Loadable(lazy(() => import('views/usuario/solicitudes')));
 const EnviarSolicitud = Loadable(lazy(() => import('views/usuario/solicitud')));
+const HistoricoUser = Loadable(lazy(() => import('views/usuario/historico')));
+
 const UserRoutes = {
   path: '/usuario',
   element: <MainLayout />,
@@ -20,6 +22,10 @@ const UserRoutes = {
     {
       path: 'enviar-solicitud',
       element: <EnviarSolicitud />
+    },
+    {
+      path: 'historico',
+      element: <HistoricoUser />
     }
   ]
 };

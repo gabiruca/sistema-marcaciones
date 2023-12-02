@@ -12,23 +12,22 @@ import { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 
 const BodySpace = () => {
+  const [solis, setSolis] = useState([]);
   const theme = useTheme();
   const style = {
     width: '100%',
     bgcolor: 'background.paper',
   };
-  const [solis, setSolis] = useState([]);
-
   function cargarSolis(){
-    let userCed=localStorage.getItem("Cedula")
     axios
     .request({
       method: "GET",
-      url: `${HOST}api/cargarSolicitudes/${userCed}`,
+      url: `${HOST}api/cargarHistoricoAdmin`,
     })
     .then((data) => {
       if (data.status === 200) {
-        setSolis(data.data.Justificaciones)
+        setSolis(data.data.justificaciones)
+        console.log(data.data.justificaciones)
       }
     })
     .catch((error) => {
@@ -47,15 +46,18 @@ const BodySpace = () => {
         <MainCard>
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
-                <Typography variant="h2" gutterBottom textAlign="center" color={theme.palette.orange.main}>
-                  Solicitudes pendientes
-                </Typography>
-                <Divider />
-                <List sx={style} component="nav" aria-label="mailbox folders">
-                  {solis.map(solicitud =>
-                    <ListItem key={solicitud.id}>
-                      <ListItemText>
-                      <Box sx={{m: 2}}>
+              <Typography variant="h2" gutterBottom textAlign="center" color={theme.palette.orange.main}>
+                Histórico de solicitudes de justificación
+              </Typography>
+              <Divider />
+              <List sx={style} component="nav" aria-label="mailbox folders" >
+                {solis.map(solicitud =>
+                  <ListItem key={solicitud.id} divider>
+                    <ListItemText>
+                    <Box sx={{m: 2}}>
+                      <Typography variant="h3" gutterBottom >
+                        {solicitud.worker}
+                      </Typography>
                         <Box sx={{m: 2, fontSize:20}}>
                           <Typography variant="body">Fecha: {solicitud.fecha}</Typography>
                         </Box>
@@ -66,11 +68,10 @@ const BodySpace = () => {
                           <Typography variant="body">Estado: {solicitud.estado}</Typography>
                         </Box>
                     </Box>
-                      </ListItemText>
-                    </ListItem>
-                  )}
-                </List>
-                <Divider />
+                    </ListItemText>
+                  </ListItem>
+                )}
+              </List>
             </Grid>
           </Grid>
         </MainCard>

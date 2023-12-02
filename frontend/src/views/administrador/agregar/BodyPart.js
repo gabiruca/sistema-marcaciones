@@ -6,28 +6,30 @@ import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import "./style-upload.css";
 import { IconFileUpload } from '@tabler/icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import 'dayjs/locale/es';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import axios from "axios";
+import { HOST } from "hooks/variables";
 
 const BodyPart = () => {
   const [open, setOpen] = React.useState(false);
   const [openArch, setOpenArch] = React.useState(false);
   const [archivo, setArchivo] = useState('');
-  const workers = [
-    {
-      value: 'John Doe',
-      label: 'John Doe',
-    }
-  ];
+  const [workers, setWorkers] = useState([]);
+  const [fecha,setFecha]=useState([]);
+  const [horaE,setHoraE]=useState([]);
+  const [horaS,setHoraS]=useState([]);
+  const [cedula,setCedula]=useState([]);
+  const form_data=new FormData();
 
   const handleClick =()=>{
     setOpen(true);
@@ -43,7 +45,97 @@ const BodyPart = () => {
     setOpenArch(false);
   };
 
-  let newDate = new Date()
+  function cargarDatos(){
+    axios
+    .request({
+      method: "GET",
+      url: `${HOST}api/cargarWorkers`,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        setWorkers(data.data.workers)
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+    });
+  }
+
+  function marcarInd(){
+    form_data.append("fecha",fecha)
+    form_data.append("cedula",cedula)
+    form_data.append("horaE",horaE)
+    form_data.append("horaS",horaS)
+    axios
+    .request({
+      method: "POST",
+      url: `${HOST}api/marcarIndividual`,
+      data:form_data,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        console.log("registrar marcacion individual")
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+    });
+    setOpen(false)
+  }
+
+  useEffect(() => {
+    cargarDatos()
+  }, []);
+
+  const handleS=(newDate)=>{
+    console.log(newDate)
+    const dateS=newDate.$d
+    let horas=dateS.getHours().toString()
+    let mins=dateS.getMinutes().toString()
+    let secs=dateS.getSeconds().toString()
+    if(horas.length==1){
+      horas='0'+horas
+    }
+    if(mins.length==1){
+      mins='0'+mins
+    }
+    if(secs.length==1){
+      secs='0'+secs
+    }
+    setHoraS(horas+':'+mins+':'+secs)
+  }
+  
+  const handleE=(newDate)=>{
+    const dateS=newDate.$d
+    let horas=dateS.getHours().toString()
+    let mins=dateS.getMinutes().toString()
+    let secs=dateS.getSeconds().toString()
+    if(horas.length==1){
+      horas='0'+horas
+    }
+    if(mins.length==1){
+      mins='0'+mins
+    }
+    if(secs.length==1){
+      secs='0'+secs
+    }
+    setHoraE(horas+':'+mins+':'+secs)
+  }
+
+  const handleF=(newDate)=>{
+    const dateS=newDate.$d
+    console.log("ESTA FECHA",dateS.getFullYear()+'-'+(dateS.getMonth()+1)+'-'+newDate.$D)
+    setFecha(dateS.getFullYear()+'-'+(dateS.getMonth()+1)+'-'+newDate.$D)
+  }
+
+  const handleChange=(event)=>{
+    setCedula(event.target.value)
+  }
+
   return (
     <>
         <MainCard>
@@ -99,8 +191,8 @@ const BodyPart = () => {
                   <TextField
                     id="outlined-select-worker"
                     select
-                    defaultValue="John Doe"
                     sx={{width: '50ch'}}
+                    onChange={handleChange}
                   >
                     {workers.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
@@ -110,16 +202,32 @@ const BodyPart = () => {
                   </TextField>
                 </Box>
                 <Box sx={{px:10}}>
-                  <Box sx={{pt:4, pb:2}}>Seleccione una fecha:</Box>
+                  <Box sx={{pt:4, pb:2}}>Seleccione la fecha:</Box>
                   <Box justifyContent="space-between" alignContent="center">
                     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
-                      <DatePicker views={['day','month', 'year']} defaultValue={dayjs(`${newDate}`)} />
+                      <DatePicker views={['day','month', 'year']}  onChange={(newValue)=>handleF(newValue)}/>
+                    </LocalizationProvider>
+                  </Box>
+                </Box>
+                <Box sx={{px:10}}>
+                  <Box sx={{pt:4, pb:2}}>Seleccione la hora de entrada:</Box>
+                  <Box justifyContent="space-between" alignContent="center">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <TimePicker  onChange={(newValue)=>handleE(newValue)}/>
+                    </LocalizationProvider>
+                  </Box>
+                </Box>
+                <Box sx={{px:10}}>
+                  <Box sx={{pt:4, pb:2}}>Seleccione la hora de salida:</Box>
+                  <Box justifyContent="space-between" alignContent="center">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <TimePicker  onChange={(newValue)=>handleS(newValue)}/>
                     </LocalizationProvider>
                   </Box>
                 </Box>
               </Grid>
               <Grid item xs={3} justifyContent="center" alignContent="center">
-                <Button sx={{mx:10, mt:15}} component="label" variant="contained" onClick={handleClick}>
+                <Button sx={{mx:10, mt:30}} component="label" variant="contained" onClick={handleClick}>
                   Guardar
                 </Button>
                 <Dialog
@@ -138,7 +246,7 @@ const BodyPart = () => {
                     </DialogContent>
                     <DialogActions>
                       <Button onClick={handleClose}>Cancelar</Button>
-                      <Button onClick={handleClose} autoFocus>Agregar</Button>
+                      <Button onClick={marcarInd} autoFocus>Agregar</Button>
                     </DialogActions>
                 </Dialog>
               </Grid>

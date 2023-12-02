@@ -48,9 +48,28 @@ const UserCard = () => {
   let month = newDate.getMonth();
   let monthName = monthNames[month];
   let year = newDate.getFullYear();
+  const [mes,setMes]=useState(month);
+  const [years,setYears]=useState(year);
 
   const [nombre, setNombre]=useState('');
   const [apellido, setApellido]=useState('');
+
+  useEffect(() => {
+    localStorage.setItem("mes",mes)
+  }, [mes]);
+
+  useEffect(() => {
+    localStorage.setItem("year",years)
+  }, [years]);
+
+  const cambiar=(newValue)=>{
+    setMes((newValue.$M)+1)
+    setYears(newValue.$y)
+    localStorage.setItem("mes",mes)
+    localStorage.setItem("year",years)
+    console.log('mes',mes),
+    console.log('year',years)
+  }
 
   function getInfoWorker(cedula){
     axios
@@ -82,7 +101,7 @@ const UserCard = () => {
             <Grid xs={8}>
               <Box sx={{px:15, pt:11, pb:2}} justifyContent="space-between" alignContent="center">
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
-                  <DatePicker views={['month', 'year']} value={dayjs(`${monthName}+" "+${year}`)} />
+                  <DatePicker views={['month', 'year']} value={dayjs(`${monthName}+" "+${year}`)} onChange={(newValue)=>cambiar(newValue)}/>
                 </LocalizationProvider>
               </Box>
             </Grid>

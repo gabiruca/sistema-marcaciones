@@ -7,120 +7,77 @@ import { Grid,Typography, Box, Button } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
 import { useTheme } from '@mui/material/styles';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import axios from "axios";
+import { HOST } from "hooks/variables";
+import { useState, useEffect } from 'react';
 
 const BodySpace = () => {
   const theme = useTheme();
-  const [openAceptar, setOpenAceptar] = React.useState(false);
-  const [openNegar, setOpenNegar] = React.useState(false);
+  const [solis, setSolis] = useState([]);
   const style = {
     width: '100%',
     bgcolor: 'background.paper',
   };
   
-  const handleClickOpenA = () => {
-    setOpenAceptar(true);
-  };
+  function cargarSolis(){
+    axios
+    .request({
+      method: "GET",
+      url: `${HOST}api/cargarSolicitudesAdmin`,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        setSolis(data.data.justificaciones)
+        console.log(data.data.justificaciones)
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+    });
+  }
 
-  const handleCloseA = () => {
-    setOpenAceptar(false);
-  };
+  useEffect(() => {
+    cargarSolis()
+  }, []);
 
-  const handleClickOpenN = () => {
-    setOpenNegar(true);
-  };
-
-  const handleCloseN = () => {
-    setOpenNegar(false);
-  };
   return (
     <>
         <MainCard>
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
-              <Typography variant="h2" gutterBottom>
-                Solicitudes de justificaciones
+              <Typography variant="h2" gutterBottom textAlign="center" color={theme.palette.orange.main}>
+                Solicitudes de justificación
               </Typography>
-              <Divider />
-              <List sx={style} component="nav" aria-label="mailbox folders">
-                <ListItem  divider>
-                  <ListItemText>
-                    <Box sx={{m:3, p:0}}>
-                      <Typography variant="h3" gutterBottom >
-                        John Doe
-                      </Typography>
-                      <Box sx={{p: 1}}>
-                        <Box sx={{mt: 3, fontSize:20}}>
-                          <Typography variant="body">Fecha: 2023-02-20</Typography>
-                        </Box>
-                        <Button variant="contained" sx={{px:3, py:1 , mx:43, mt:-5, backgroundColor: theme.palette.success.dark}} onClick={handleClickOpenA}>
-                          Aceptar
-                        </Button>
-                        <Dialog
-                          open={openAceptar}
-                          onClose={handleCloseA}
-                          aria-labelledby="alert-dialog-title"
-                          aria-describedby="alert-dialog-description"
-                        >
-                          <DialogTitle id="alert-dialog-title" fontSize="large">
-                            {"Aceptar solicitud"}
-                          </DialogTitle>
-                          <DialogContent>
-                            <DialogContentText id="alert-dialog-description" color="text">
-                              <p>¿Está seguro de que desea aceptar esta solicitud?</p>
-                              <p>Trabajador: John Doe</p>
-                              <p>Fecha: 2023-02-13</p>
-                            </DialogContentText>
-                          </DialogContent>
-                          <DialogActions>
-                            <Button onClick={handleCloseA}>Cancelar</Button>
-                            <Button onClick={handleCloseA} autoFocus>Aceptar</Button>
-                          </DialogActions>
-                        </Dialog>
-                      </Box>
-                      <Box sx={{p: 1}}>
-                        <Box sx={{mt: 3, fontSize:20}}>
-                          <Typography variant="body">Descripción: Atraso - Cita médica</Typography>
-                        </Box>
-                        <Button variant="contained" sx={{px:3, py:1 , mx:43.5, mt:-5, backgroundColor: theme.palette.error.main}} onClick={handleClickOpenN}>
-                          Negar
-                        </Button>
-                        <Dialog
-                          open={openNegar}
-                          onClose={handleCloseN}
-                          aria-labelledby="alert-dialog-title"
-                          aria-describedby="alert-dialog-description"
-                        >
-                          <DialogTitle id="alert-dialog-title" fontSize="large">
-                            {"Negar solicitud"}
-                          </DialogTitle>
-                          <DialogContent>
-                            <DialogContentText id="alert-dialog-description" color="text">
-                              <p>¿Está seguro de que desea negar esta solicitud?</p>
-                              <p>Trabajador: John Doe</p>
-                              <p>Fecha: 2023-02-13</p>
-                            </DialogContentText>
-                          </DialogContent>
-                          <DialogActions>
-                            <Button onClick={handleCloseN}>Cancelar</Button>
-                            <Button onClick={handleCloseN} autoFocus>Negar</Button>
-                          </DialogActions>
-                        </Dialog>
-                      </Box>
-                    </Box>
-                      <Box sx={{mt: 3,mx:4, fontSize:20}}>
-                        <Typography variant="body">Estado: Pendiente</Typography>
-                      </Box>
-                  </ListItemText>
-                </ListItem>
-              </List>
             </Grid>
-          </Grid>
-        </MainCard>
+            <List sx={style} component="nav" aria-label="mailbox folders" >
+              {solis.map(solicitud =>
+              <ListItem key={solicitud.id}>
+                <ListItemText>
+                  <Divider />
+                  <Grid item xs={12}>
+                    <Button sx={{mt: 2, ml:5}} variant="contained" onClick={()=>(localStorage.setItem("solicitud-id",solicitud.id),localStorage.setItem("solicitud-fecha",solicitud.fecha),localStorage.setItem("solicitud-worker",solicitud.worker),localStorage.setItem("solicitud-desc",solicitud.descripcion),window.location.href = '/administrador/manejar-solicitud')}>
+                      <Typography variant="h3" gutterBottom sx={{mt:1}} color="white">
+                        {solicitud.worker}
+                      </Typography>
+                      <Box sx={{m: 4, fontSize:20}}>
+                        <Typography variant="body">Fecha: {solicitud.fecha}</Typography>
+                      </Box>
+                      <Box sx={{m: 2, fontSize:20}}>
+                        <Typography variant="body">Descripción: {solicitud.descripcion}</Typography>
+                      </Box>
+                      <Box sx={{m: 2, fontSize:20}}>
+                        <Typography variant="body">Estado: {solicitud.estado}</Typography>
+                      </Box>
+                    </Button>
+                  </Grid>
+                </ListItemText>
+              </ListItem>
+              )}
+            </List>
+        </Grid>
+      </MainCard>
     </>
   );
 };

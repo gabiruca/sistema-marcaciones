@@ -1,5 +1,4 @@
-import { IconChecklist } from '@tabler/icons';
-const icons = {IconChecklist};
+import { IconChecklist,  IconFileTime } from '@tabler/icons';
 
 const userJustificaciones = {
   id: 'user-justificaciones',
@@ -11,7 +10,14 @@ const userJustificaciones = {
       title: 'Solicitudes',
       type: 'item',
       url: '/usuario/solicitudes-user',
-      icon: icons.IconChecklist
+      icon: IconChecklist
+    },
+    {
+      id: 'historico',
+      title: 'Histórico',
+      type: 'item',
+      url: '/usuario/historico',
+      icon: IconFileTime
     }
   ]
 };
