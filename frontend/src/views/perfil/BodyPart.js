@@ -10,6 +10,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from "axios";
 import { HOST } from "hooks/variables";
+import Alert from '@mui/material/Alert';
 
 import './styles.css';
 
@@ -18,7 +19,11 @@ const BodyPart = () => {
   const [datos, setDatos] = useState('');
   const [pass, setPass] = useState ('');
   const [newpass, setNewpass] = useState ('');
+  //const [ruta,setRuta]=useState('');
   const form_data = new FormData();
+  const [alertS, setAlertS]= useState(false);
+  const [alertE, setAlertE]= useState(false);
+  const [alertContent, setAlertContent]= useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -62,7 +67,46 @@ const BodyPart = () => {
     })
     .then((data) => {
       if (data.status === 200) {
-        setDatos(data.data);
+        setAlertS(true)
+        setAlertContent("Contraseña actualizada")
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+      setAlertE(true)
+      setAlertContent("No se pudo actualizar la contraseña")
+    });
+  }
+
+  const timeout = setTimeout(() => {
+    setAlertS(false);
+    setAlertE(false);
+  }, 10000);
+
+  useEffect(() => {
+    if(alertS){
+      timeout
+    }
+  }, [alertS]);
+
+  useEffect(() => {
+    if(alertE){
+      timeout
+    }
+  }, [alertE]);
+
+  /*function rutaImg(cedula){
+    axios
+    .request({
+      method: "GET",
+      url: `${HOST}api/cargarImg/${cedula}`,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        setRuta(data.data.Ruta);
+        console.log(data.data.Ruta)
       }
     })
     .catch((error) => {
@@ -70,10 +114,11 @@ const BodyPart = () => {
         console.log(error.response)
       }
     });
-  }
+  }*/
 
   useEffect(() => {
     getInfoWorker(localStorage.getItem("Cedula"));
+    //rutaImg(localStorage.getItem("Cedula"));
   }, []);
   useEffect(() => {
     getInfoWorker(localStorage.getItem("Cedula"));
@@ -81,6 +126,8 @@ const BodyPart = () => {
 
   return (
     <>
+        {alertS ? <Alert severity='success' variant='filled' sx={{mb:3}}>{alertContent}</Alert> : <></> }
+        {alertE ? <Alert severity='error' variant='filled' sx={{mb:3}}>{alertContent}</Alert> : <></> }
         <MainCard>
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>

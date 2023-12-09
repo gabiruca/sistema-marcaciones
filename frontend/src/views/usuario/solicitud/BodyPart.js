@@ -16,12 +16,15 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import axios from "axios";
 import { HOST } from "hooks/variables";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Alert from '@mui/material/Alert';
 
 const BodyPart = () => {
   const [open, setOpen] = useState(false);
   const [motivo,setMotivo]=useState('');
   const form_data= new FormData();
+  const [alertE, setAlertE]= useState(false);
+  const [alertContent, setAlertContent]= useState("");
 
   //let newDate = new Date();
   let fech=localStorage.getItem("fecha-solicitud")
@@ -53,6 +56,16 @@ const BodyPart = () => {
     setMotivo(event.target.value)
   }
 
+  const timeout = setTimeout(() => {
+    setAlertE(false);
+  }, 10000);
+
+  useEffect(() => {
+    if(alertE){
+      timeout
+    }
+  }, [alertE]);
+
   function enviar(){
     form_data.append("motivo",motivo)
     form_data.append("fecha",fech)
@@ -66,6 +79,7 @@ const BodyPart = () => {
     })
     .then((data) => {
       if (data.status === 200) {
+        console.log(data.data.msg)
         window.location.href = '/usuario/consultar-user'
       }
     })
@@ -73,10 +87,13 @@ const BodyPart = () => {
       if (error.response) {
         console.log(error.response)
       }
+      setAlertE(true)
+      setAlertContent("No se pudo enviar la solicitud")
     });
   }
   return (
     <>
+        {alertE ? <Alert severity='error' variant='filled' sx={{mb:3}}>{alertContent}</Alert> : <></> }
         <MainCard>
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>

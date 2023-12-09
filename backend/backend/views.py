@@ -1,9 +1,7 @@
 from datetime import datetime
-import time
 from django.http import JsonResponse, HttpResponse
 from rest_framework import generics
 from .models import *
-from PIL import Image
 
 #El test de la api funcional
 class Test(generics.GenericAPIView):
@@ -82,27 +80,22 @@ class CargarDatosTablaAdmin(generics.GenericAPIView):
 
 class CargarSolicitudes(generics.GenericAPIView):
     def get(self, request,cedula):
-        justificacion=list()
-        idsMarc=list()
-        try:
-            worker=Usuario.objects.get(cedula=cedula)
-            marcaciones=Marcacion.objects.filter(codigoBiometrico=worker.codigoBiometrico)
-            for marcacion in marcaciones:
-                idsMarc.append(marcacion.idMarcacion)
-            for idM in idsMarc:
-                try:
-                    inconsis=Inconsistencia.objects.get(idMarcacion=idM)
-                    estado=inconsis.estado
-                    if(estado=='P'):
-                        if(estado=="P"):
-                            estado='Pendiente'
-                        justif=TipoJustificacion.objects.get(idTipo=inconsis.idTipo.idTipo)
-                        justificacion.append({"descripcion":justif.descripcion,"estado":estado,"fecha":marcacion.fecha})
-                except(Inconsistencia.objects.get(idMarcacion=idM).DoesNotExist):
-                    return JsonResponse({"msg":"No existen incosistencias que mostrar"},status=404)
-            return JsonResponse({"Justificaciones":justificacion},status=200)
-        except(Usuario.objects.get(cedula=cedula).DoesNotExist):
-            return JsonResponse({'msg': 'Usuario vinculado a esta cédula no existe'},status=404)
+        solicitud=list()
+        worker=Usuario.objects.get(cedula=cedula)
+        tiposJust=TipoJustificacion.objects.filter(codigoBiometrico=worker.codigoBiometrico)
+        for justi in tiposJust:
+            descripcion=justi.descripcion
+            idTipo=justi.idTipo
+            incons=Inconsistencia.objects.get(idTipo=idTipo)
+            id=incons.idMarcacion.idMarcacion
+            marcacion=Marcacion.objects.get(idMarcacion=id)
+            estado=''
+            if(incons.estado=="P"):
+                user=Usuario.objects.get(codigoBiometrico=marcacion.codigoBiometrico.codigoBiometrico)
+                if(incons.estado=="P"):
+                    estado='Pendiente'
+                solicitud.append({'id':idTipo,'fecha':marcacion.fecha,'descripcion':descripcion,'estado':estado})
+        return JsonResponse({"justificaciones":solicitud},status=200)
         
 class EnviarSolicitud(generics.GenericAPIView):
     #Necesito: biometrico de quien modifica,descripcion,fechaIngreso para tipo just
@@ -116,11 +109,11 @@ class EnviarSolicitud(generics.GenericAPIView):
             user=Usuario.objects.get(cedula=cedula)
             try:
                 marcacion=Marcacion.objects.get(fecha=fecha,codigoBiometrico=user)
-                if(TipoJustificacion.objects.filter(codigoBiometrico=user,descripcion=descripcion,fechaIngreso=fechaA).count()==0):
+                incons=Inconsistencia.objects.filter(idMarcacion=marcacion.idMarcacion)
+                if(incons.count()==0):
                     justif=TipoJustificacion(codigoBiometrico=user,descripcion=descripcion,fechaIngreso=fechaA)
                     justif.save()
-                    searchJust=TipoJustificacion.objects.get(codigoBiometrico=user,descripcion=descripcion,fechaIngreso=fechaA)
-                    incons=Inconsistencia(idTipo=searchJust,idMarcacion=marcacion,estado="P")
+                    incons=Inconsistencia(idTipo=justif,idMarcacion=marcacion,estado="P")
                     incons.save()
                     return JsonResponse({"msg":"Solicitud enviada"},status=200)
                 else:
@@ -214,29 +207,26 @@ class HistoricoSolicitudesAdmin(generics.GenericAPIView):
 
 class HistoricoSolicitudes(generics.GenericAPIView):
     def get(self, request,cedula):
-        justificacion=list()
-        idsMarc=list()
-        try:
-            worker=Usuario.objects.get(cedula=cedula)
-            marcaciones=Marcacion.objects.filter(codigoBiometrico=worker.codigoBiometrico)
-            for marcacion in marcaciones:
-                idsMarc.append(marcacion.idMarcacion)
-            for idM in idsMarc:
-                try:
-                    inconsis=Inconsistencia.objects.get(idMarcacion=idM)
-                    estado=inconsis.estado
-                    if(estado=='NJ' or estado=='J'):
-                        if(estado=="NJ"):
-                            estado='Negada'
-                        elif(estado=='J'):
-                            estado='Justificada'
-                        justif=TipoJustificacion.objects.get(idTipo=inconsis.idTipo.idTipo)
-                        justificacion.append({"descripcion":justif.descripcion,"estado":estado,"fecha":marcacion.fecha})
-                except(Inconsistencia.objects.get(idMarcacion=idM).DoesNotExist):
-                    return JsonResponse({"msg":"No existen incosistencias que mostrar"},status=404)
-            return JsonResponse({"Justificaciones":justificacion},status=200)
-        except(Usuario.objects.get(cedula=cedula).DoesNotExist):
-            return JsonResponse({'msg': 'Usuario vinculado a esta cédula no existe'},status=404)
+        solicitud=list()
+        idCont=0
+        worker=Usuario.objects.get(cedula=cedula)
+        tiposJust=TipoJustificacion.objects.filter(codigoBiometrico=worker.codigoBiometrico)
+        for justi in tiposJust:
+            descripcion=justi.descripcion
+            idTipo=justi.idTipo
+            incons=Inconsistencia.objects.get(idTipo=idTipo)
+            id=incons.idMarcacion.idMarcacion
+            marcacion=Marcacion.objects.get(idMarcacion=id)
+            estado=''
+            if(incons.estado=="NJ" or incons.estado=="J"):
+                user=Usuario.objects.get(codigoBiometrico=marcacion.codigoBiometrico.codigoBiometrico)
+                if(incons.estado=="NJ"):
+                    estado='Negada'
+                elif(incons.estado=='J'):
+                    estado='Justificada'
+                solicitud.append({'id':idCont,'fecha':marcacion.fecha,'descripcion':descripcion,'estado':estado})
+            idCont=idCont+1
+        return JsonResponse({"justificaciones":solicitud},status=200)
 
 class CargarDatosTabla(generics.GenericAPIView):
     def get(self, request, cedula, mes, year):
@@ -339,3 +329,46 @@ class MarcacionIndividual(generics.GenericAPIView):
             return JsonResponse({'msg': 'marcacion registrado'},status=200)
         except(Usuario.objects.get(cedula=cedula).DoesNotExist):
             return JsonResponse({'msg': 'Usuario no encontrado'},status=500)
+        
+class SubirImg(generics.GenericAPIView):
+    def post(self,request):
+        img=request.FILES['image']
+        cedula=request.data["cedula"]
+        try:
+            user=Usuario.objects.get(cedula=cedula)
+            with open('media/' + img.name, 'wb+') as destination:
+                for chunk in img.chunks():
+                    destination.write(chunk)
+            user.nombreimg=img.name
+            user.save()
+            return JsonResponse({'message': 'Imagen subida exitosamente'})
+        except(Usuario.objects.get(cedula=cedula).DoesNotExist):
+            return JsonResponse({'message': 'No se pudo subir la imagen'})
+    
+class ObtenerImg(generics.GenericAPIView):
+    def get(self,request,cedula):
+        try:
+            user=Usuario.objects.get(cedula=cedula)
+            rutaimg=user.nombreimg
+            if(rutaimg==None):
+                rutaimg="picture-placeholder.jpg"
+            return JsonResponse({'Ruta': rutaimg}, status=200)
+        except(Usuario.objects.get(cedula=cedula).DoesNotExist):
+            return JsonResponse({'message': 'No se pudo encontrar la ruta de la imagen'})
+        
+class IsPublicado(generics.GenericAPIView):
+    def get(self, request,cedula,mes,year):
+        publicado=True
+        try:
+            worker=Usuario.objects.get(cedula=cedula)
+            biometrico=worker.codigoBiometrico
+            marcaciones=Marcacion.objects.filter(codigoBiometrico=biometrico)
+            for marcacion in marcaciones:
+                mesMarca=marcacion.fecha.strftime('%m')
+                yearMarca=marcacion.fecha.strftime('%y')
+                if(mes==mesMarca and year=="20"+yearMarca):
+                    if(marcacion.publicado==False):
+                        publicado=False
+            return JsonResponse({"isPublicado":publicado},status=200)
+        except(Usuario.objects.get(cedula=cedula).DoesNotExist):
+            return JsonResponse({'msg': 'Usuario vinculado a esta cédula no existe'},status=404)

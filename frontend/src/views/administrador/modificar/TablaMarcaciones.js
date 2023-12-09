@@ -1,4 +1,4 @@
-import { useState} from 'react';
+import { useState,useEffect} from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -22,6 +22,7 @@ import dayjs from 'dayjs';
 import Button from '@mui/material/Button';
 import axios from "axios";
 import { HOST } from "hooks/variables";
+import Alert from '@mui/material/Alert';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -51,6 +52,9 @@ function TablaMarcaciones () {
   const [horaS, setHoraS] = useState(0);
   const [fecha, setFecha] = useState('');
   const [published, setPublished]= useState(false);
+  const [alertS, setAlertS]= useState(false);
+  const [alertE, setAlertE]= useState(false);
+  const [alertContent, setAlertContent]= useState("");
   const theme = useTheme();
   const form_data = new FormData();
   const form_data1 = new FormData();
@@ -106,7 +110,32 @@ function TablaMarcaciones () {
     })
     .then((data) => {
       if (data.status === 200) {
-        console.log("publicado!")
+        setPublished(true)
+        setAlertS(true)
+        setAlertContent("Marcaciones publicadas")
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+      setAlertE(true)
+      setAlertContent("Las marcaciones no pudieron ser publicadas")
+    });
+  }
+
+  function verificarPublicado(cedula,mes,year){
+    if(mes.length==1){
+      mes='0'+mes
+    }
+    axios
+    .request({
+      method: "GET",
+      url: `${HOST}api/publishedStatus/${cedula}/${mes}/${year}`,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        setPublished(data.data.isPublicado)
       }
     })
     .catch((error) => {
@@ -115,6 +144,27 @@ function TablaMarcaciones () {
       }
     });
   }
+
+  useEffect(() => {
+    verificarPublicado(localStorage.getItem("CedulaWorker"),localStorage.getItem("mes").toString(),localStorage.getItem("year").toString())
+  }, [localStorage.getItem("CedulaWorker"),localStorage.getItem("mes"),localStorage.getItem("year")]);
+
+  const timeout = setTimeout(() => {
+    setAlertS(false);
+    setAlertE(false);
+  }, 10000);
+
+  useEffect(() => {
+    if(alertS){
+      timeout
+    }
+  }, [alertS]);
+
+  useEffect(() => {
+    if(alertE){
+      timeout
+    }
+  }, [alertE]);
 
  const handleRef=()=>{
     getTablaData(localStorage.getItem("CedulaWorker"),localStorage.getItem("mes").toString(),localStorage.getItem("year").toString());
@@ -208,6 +258,8 @@ function TablaMarcaciones () {
   }
   return (
     <>
+        {alertS ? <Alert severity='success' variant='filled' sx={{mb:3}}>{alertContent}</Alert> : <></> }
+        {alertE ? <Alert severity='error' variant='filled' sx={{mb:3}}>{alertContent}</Alert> : <></> }
         <MainCard>
           <Button variant="contained" sx={{px:3, py:1 , my:1.5}} onClick={handleRef}>
             Ver marcaciones

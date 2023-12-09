@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { Grid, Button, Stack, Paper, Select, MenuItem, TextField } from '@mui/material';
+import { Grid, Button, Stack, Paper, Select, MenuItem, TextField, Typography } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
-import ProfilePic from 'assets/images/picture-placeholder.jpg';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { IconDeviceFloppy } from '@tabler/icons';
 import './styles.css';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -17,9 +16,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from "axios";
 import { HOST } from "hooks/variables";
+import Alert from '@mui/material/Alert';
 
 const BodyPart = () => {
-  const [archivo, setArchivo] = useState('');
   const [cedula, setCedula]=useState('');
   const [openAceptar, setOpenAceptar] = React.useState(false);
   const [biom, setBiom]=useState('');
@@ -29,6 +28,10 @@ const BodyPart = () => {
   const [born, setBorn]=useState('');
   const [cont, setCont]=useState('');
   const [gen, setGen]=useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [alertS, setAlertS]= useState(false);
+  const [alertE, setAlertE]= useState(false);
+  const [alertContent, setAlertContent]= useState("");
   const form_data = new FormData();
 
   const Item = styled(Paper)(({ theme }) => ({
@@ -66,14 +69,62 @@ const BodyPart = () => {
     .then((data) => {
       if (data.status === 200) {
         setDatos(data.data);
+        setAlertS(true)
+        setAlertContent("Trabajador registrado")
       }
     })
     .catch((error) => {
       if (error.response) {
         console.log(error.response)
       }
+      setAlertE(true)
+      setAlertContent("No se pudo registrar al trabajador")
     });
   }
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const timeout = setTimeout(() => {
+    setAlertS(false);
+    setAlertE(false);
+  }, 10000);
+
+  useEffect(() => {
+    if(alertS){
+      timeout
+    }
+  }, [alertS]);
+
+  useEffect(() => {
+    if(alertE){
+      timeout
+    }
+  }, [alertE]);
+
+  const handleUpload = async () => {
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('image', selectedFile);
+      formData.append("cedula",cedula)
+      try {
+        const response = await axios.post(`${HOST}api/subirImg`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log(response.data);
+        setAlertS(true)
+        setAlertContent("Imagen subida")
+      } catch (error) {
+        setAlertE(true)
+        setAlertContent("Error al subir la imagen")
+      }
+    } else {
+      console.error('Por favor, selecciona una imagen antes de subirla.');
+    }
+  };
 
   const handleA = () => {
     registrarUser();
@@ -93,6 +144,7 @@ const BodyPart = () => {
         <MainCard>
           <Grid container spacing={gridSpacing}>
             <Grid item xs={6}>
+              <Typography sx={{mt:5}} variant='h4'> 1.- Ingrese los datos del nuevo trabajador: </Typography>
                 <div className='div-class'>
                   <p className='tags-names'>Ingrese cédula</p>
                   <TextField type="number"  onChange={event => {setCedula(event.target.value);}}/>
@@ -140,50 +192,49 @@ const BodyPart = () => {
                     ))}
                   </Select>
                 </div>
+                <Button variant="contained" sx={{ml:17}} onClick={handleClickOpenA}>
+                  <IconDeviceFloppy/> Registrar usuario
+                </Button>
+                <Dialog
+                  open={openAceptar}
+                  onClose={handleClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title" fontSize="large">
+                    {"Registrar usuario"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description" color="text">
+                      <p>¿Está seguro de que desea registrar a este usuario?</p>
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose}>Cancelar</Button>
+                    <Button onClick={handleA} autoFocus>Aceptar</Button>
+                  </DialogActions>
+                  </Dialog>
             </Grid>
-            <Grid item alignContent="left" justifyContent="space-between" xs={6}>
+            <Grid item xs={6}>
             <Stack direction="row">
-              <Item>
-                <img id="profile" src={ProfilePic} alt="profile" />
-                <p>{archivo}</p>  
-              </Item>
-              <Item>
+              <Item textAlign="right">
                 <div id='div-pic'>
+                  <Typography sx={{mb:5}} variant='h4'> 2.- Seleccione y suba una imagen del nuevo trabajador: </Typography>
                   <Button variant='contained'>
                     <label htmlFor="input-pic">Seleccionar</label>
-                    <input type="file" id="input-pic" accept=".jpg, .jpeg, .png" hidden onChange={e => setArchivo(e.target.value)}/>
+                    <input type="file" id="input-pic" accept=".jpg, .jpeg, .png" hidden onChange={handleFileChange}/>
                   </Button>
                 </div>
-                <Button variant="contained">
+                <Button variant="contained" onClick={handleUpload}>
                   Subir
                 </Button>
               </Item>
             </Stack>
-            <Button variant="contained" sx={{m:20}} onClick={handleClickOpenA}>
-              <IconDeviceFloppy/> Registrar usuario
-            </Button>
-            <Dialog
-              open={openAceptar}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title" fontSize="large">
-                {"Registrar usuario"}
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description" color="text">
-                  <p>¿Está seguro de que desea registrar a este usuario?</p>
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>Cancelar</Button>
-                <Button onClick={handleA} autoFocus>Aceptar</Button>
-              </DialogActions>
-              </Dialog>
             </Grid>
           </Grid>
         </MainCard>
+        {alertS ? <Alert severity='success' variant='filled' sx={{mb:3}}>{alertContent}</Alert> : <></> }
+        {alertE ? <Alert severity='error' variant='filled' sx={{mb:3}}>{alertContent}</Alert> : <></> }
     </>
   );
 };

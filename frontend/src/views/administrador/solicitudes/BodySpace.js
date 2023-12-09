@@ -56,7 +56,7 @@ const BodySpace = () => {
               <ListItem key={solicitud.id}>
                 <ListItemText>
                   <Divider />
-                  <Grid item xs={12}>
+                  <Grid item xs={12} textAlign="center">
                     <Button sx={{mt: 2, ml:5}} variant="contained" onClick={()=>(localStorage.setItem("solicitud-id",solicitud.id),localStorage.setItem("solicitud-fecha",solicitud.fecha),localStorage.setItem("solicitud-worker",solicitud.worker),localStorage.setItem("solicitud-desc",solicitud.descripcion),window.location.href = '/administrador/manejar-solicitud')}>
                       <Typography variant="h3" gutterBottom sx={{mt:1}} color="white">
                         {solicitud.worker}

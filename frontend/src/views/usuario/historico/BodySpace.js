@@ -28,7 +28,7 @@ const BodySpace = () => {
     })
     .then((data) => {
       if (data.status === 200) {
-        setSolis(data.data.Justificaciones)
+        setSolis(data.data.justificaciones)
       }
     })
     .catch((error) => {

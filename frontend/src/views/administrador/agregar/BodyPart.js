@@ -19,6 +19,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from "axios";
 import { HOST } from "hooks/variables";
+import Alert from '@mui/material/Alert';
 
 const BodyPart = () => {
   const [open, setOpen] = React.useState(false);
@@ -29,6 +30,9 @@ const BodyPart = () => {
   const [horaE,setHoraE]=useState([]);
   const [horaS,setHoraS]=useState([]);
   const [cedula,setCedula]=useState([]);
+  const [alertS, setAlertS]= useState(false);
+  const [alertE, setAlertE]= useState(false);
+  const [alertContent, setAlertContent]= useState("");
   const form_data=new FormData();
 
   const handleClick =()=>{
@@ -76,13 +80,16 @@ const BodyPart = () => {
     })
     .then((data) => {
       if (data.status === 200) {
-        console.log("registrar marcacion individual")
+        setAlertS(true)
+        setAlertContent("Marcación individual agregada")
       }
     })
     .catch((error) => {
       if (error.response) {
         console.log(error.response)
       }
+      setAlertE(true)
+      setAlertContent("No se pudo agregar la marcacion individual")
     });
     setOpen(false)
   }
@@ -90,6 +97,23 @@ const BodyPart = () => {
   useEffect(() => {
     cargarDatos()
   }, []);
+
+  const timeout = setTimeout(() => {
+    setAlertS(false);
+    setAlertE(false);
+  }, 10000);
+
+  useEffect(() => {
+    if(alertS){
+      timeout
+    }
+  }, [alertS]);
+
+  useEffect(() => {
+    if(alertE){
+      timeout
+    }
+  }, [alertE]);
 
   const handleS=(newDate)=>{
     console.log(newDate)
@@ -138,6 +162,8 @@ const BodyPart = () => {
 
   return (
     <>
+        {alertS ? <Alert severity='success' variant='filled' sx={{mb:3}}>{alertContent}</Alert> : <></> }
+        {alertE ? <Alert severity='error' variant='filled' sx={{mb:3}}>{alertContent}</Alert> : <></> }
         <MainCard>
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>

@@ -45,8 +45,8 @@ const UserCard = () => {
 
   const monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
   let newDate = new Date()
-  let month = newDate.getMonth();
-  let monthName = monthNames[month];
+  let month = newDate.getMonth()+1;
+  let monthName = monthNames[month-1];
   let year = newDate.getFullYear();
   const [mes,setMes]=useState(month);
   const [years,setYears]=useState(year);

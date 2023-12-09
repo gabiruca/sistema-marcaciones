@@ -11,6 +11,7 @@ class Usuario(models.Model):
     nombres = models.CharField(max_length=150)
     apellidos = models.CharField(max_length=150)
     genero = models.CharField(max_length=1)
+    nombreimg = models.CharField(max_length=150)
 
     class Meta:
         managed = False

@@ -45,9 +45,9 @@ const UserCard = () => {
   const theme = useTheme();
   const monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
   let newDate = new Date()
-  let month = newDate.getMonth();
+  let month = newDate.getMonth()+1;
   let year = newDate.getFullYear();
-  let mname=monthNames[month]
+  let mname=monthNames[month-1]
 
   //Datos trabajador
   const [apellidos,setApellidos]=useState('');

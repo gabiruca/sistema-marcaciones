@@ -28,7 +28,7 @@ const BodySpace = () => {
     })
     .then((data) => {
       if (data.status === 200) {
-        setSolis(data.data.Justificaciones)
+        setSolis(data.data.justificaciones)
       }
     })
     .catch((error) => {
@@ -50,22 +50,22 @@ const BodySpace = () => {
                 <Typography variant="h2" gutterBottom textAlign="center" color={theme.palette.orange.main}>
                   Solicitudes pendientes
                 </Typography>
-                <Divider />
                 <List sx={style} component="nav" aria-label="mailbox folders">
                   {solis.map(solicitud =>
                     <ListItem key={solicitud.id}>
                       <ListItemText>
-                      <Box sx={{m: 2}}>
-                        <Box sx={{m: 2, fontSize:20}}>
-                          <Typography variant="body">Fecha: {solicitud.fecha}</Typography>
-                        </Box>
+                        <Divider />
+                        <Box sx={{mt: 4}}>
                           <Box sx={{m: 2, fontSize:20}}>
-                            <Typography variant="body">Descripción: {solicitud.descripcion}</Typography>
+                            <Typography variant="body">Fecha: {solicitud.fecha}</Typography>
                           </Box>
-                        <Box sx={{m: 2, fontSize:20}}>
-                          <Typography variant="body">Estado: {solicitud.estado}</Typography>
+                            <Box sx={{m: 2, fontSize:20}}>
+                              <Typography variant="body">Descripción: {solicitud.descripcion}</Typography>
+                            </Box>
+                          <Box sx={{m: 2, fontSize:20}}>
+                            <Typography variant="body">Estado: {solicitud.estado}</Typography>
+                          </Box>
                         </Box>
-                    </Box>
                       </ListItemText>
                     </ListItem>
                   )}
