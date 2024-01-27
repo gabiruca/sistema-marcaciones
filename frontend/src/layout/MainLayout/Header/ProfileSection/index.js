@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import axios from "axios";
+import { HOST } from "hooks/variables";
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -21,7 +22,7 @@ import {
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
-import ProfilePic from 'assets/images/picture-placeholder.jpg';
+//import ProfilePic from 'assets/images/picture-placeholder.jpg';
 
 // assets
 import { IconSettings } from '@tabler/icons';
@@ -37,6 +38,7 @@ const ProfileSection = () => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
+  const [ruta,setRuta]=useState('');
 
   const handleLogout = async () => {
     lineHeight
@@ -50,6 +52,25 @@ const ProfileSection = () => {
     }
     setOpen(false);
   };
+
+  function rutaImg(cedula){
+    axios
+    .request({
+      method: "GET",
+      url: `${HOST}api/cargarImg/${cedula}`,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        setRuta(data.data.imagen);
+        console.log(data.data.imagen, "route")
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+    });
+  }
 
   const handleListItemClick = (event, index, route = '') => {
     setSelectedIndex(index);
@@ -71,6 +92,10 @@ const ProfileSection = () => {
 
     prevOpen.current = open;
   }, [open]);
+
+  useEffect(() => {
+    rutaImg(localStorage.getItem("Cedula"))
+  }, []);
 
   return (
     <>
@@ -96,7 +121,7 @@ const ProfileSection = () => {
         }}
         icon={
           <Avatar
-            src={ProfilePic}
+            src={`data:image/jpeg;base64,${ruta}`}
             sx={{
               ...theme.typography.mediumAvatar,
               margin: '8px 0 8px 8px !important',

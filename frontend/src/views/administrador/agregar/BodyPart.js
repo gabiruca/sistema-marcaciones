@@ -24,7 +24,7 @@ import Alert from '@mui/material/Alert';
 const BodyPart = () => {
   const [open, setOpen] = React.useState(false);
   const [openArch, setOpenArch] = React.useState(false);
-  const [archivo, setArchivo] = useState('');
+  const [archivo, setArchivo] = useState([]);
   const [workers, setWorkers] = useState([]);
   const [fecha,setFecha]=useState([]);
   const [horaE,setHoraE]=useState([]);
@@ -90,6 +90,30 @@ const BodyPart = () => {
       }
       setAlertE(true)
       setAlertContent("No se pudo agregar la marcacion individual")
+    });
+    setOpen(false)
+  }
+
+  function marcarGrupal(){
+    form_data.append('archivo', archivo);
+    axios
+    .request({
+      method: "POST",
+      url: `${HOST}api/marcacionGrupal`,
+      data:form_data,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        setAlertS(true)
+        setAlertContent("Marcación grupal agregada")
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+      setAlertE(true)
+      setAlertContent("No se pudo agregar la marcacion grupal")
     });
     setOpen(false)
   }
@@ -177,7 +201,7 @@ const BodyPart = () => {
                     <div className="file-upload">
                       <IconFileUpload />
                       <h3>Seleccionar archivo</h3>
-                      <input type="file" accept=".xls, .csv, .xlsm, .xlsx, .xlsb" onChange={e => setArchivo(e.target.value)}/>
+                      <input type="file" accept=".xlsx" onChange={event => setArchivo(event.target.files[0])}/>
                     </div>
                   </div>
                 </div>
@@ -201,10 +225,9 @@ const BodyPart = () => {
                     </DialogContent>
                     <DialogActions>
                       <Button onClick={handleCloseArch}>Cancelar</Button>
-                      <Button onClick={handleCloseArch} autoFocus>Subir</Button>
+                      <Button onClick={marcarGrupal} autoFocus>Subir</Button>
                     </DialogActions>
                 </Dialog>
-                  <span>{archivo}</span>
                 </div>
               </Grid>
               <Divider>

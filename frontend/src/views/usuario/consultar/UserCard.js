@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography, Grid } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
-import ProfilePic from 'assets/images/picture-placeholder.jpg';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -53,6 +52,7 @@ const UserCard = () => {
 
   const [nombre, setNombre]=useState('');
   const [apellido, setApellido]=useState('');
+  const [ruta,setRuta]=useState('');
 
   useEffect(() => {
     localStorage.setItem("mes",mes)
@@ -90,8 +90,28 @@ const UserCard = () => {
     });
   }
 
+  function rutaImg(cedula){
+    axios
+    .request({
+      method: "GET",
+      url: `${HOST}api/cargarImg/${cedula}`,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        setRuta(data.data.imagen);
+        console.log(data.data.imagen, "route")
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+    });
+  }
+
   useEffect(() => {
     getInfoWorker(localStorage.getItem("Cedula"));
+    rutaImg(localStorage.getItem("Cedula"))
   }, []);
 
   return (
@@ -131,7 +151,7 @@ const UserCard = () => {
                     <ListItemAvatar>
                       <Avatar
                         variant="rounded"
-                        src={ProfilePic}
+                        src={`data:image/jpeg;base64,${ruta}`}
                         sx={{
                           ...theme.typography.commonAvatar,
                           ...theme.typography.largestAvatar,

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography, Select, MenuItem, Grid } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
-import ProfilePic from 'assets/images/picture-placeholder.jpg';
+//import ProfilePic from 'assets/images/picture-placeholder.jpg';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -55,7 +55,7 @@ const UserCard = () => {
   const [cedula,setCedula]=useState('');
   const [mes,setMes]=useState(month);
   const [years,setYears]=useState(year);
-  
+  const [ruta,setRuta]=useState('');
 
   //Diccionario trabajadores
   const [workers,setWorkers]=useState([])
@@ -79,6 +79,25 @@ const UserCard = () => {
       }
     });
   }
+  
+  function rutaImg(cedula){
+    axios
+    .request({
+      method: "GET",
+      url: `${HOST}api/cargarImg/${cedula}`,
+    })
+    .then((data) => {
+      if (data.status === 200) {
+        setRuta(data.data.imagen);
+        console.log(data.data.imagen, "route")
+      }
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+      }
+    });
+  }
 
   useEffect(() => {
     getInfoWorker(localStorage.getItem("CedulaWorker"));
@@ -93,7 +112,8 @@ const UserCard = () => {
   }, [years]);
 
   useEffect(() => {
-    cargarDatos()
+    cargarDatos();
+    rutaImg(localStorage.getItem("CedulaWorker"));
   }, []);
 
 
@@ -177,18 +197,20 @@ const UserCard = () => {
                       }
                     />
                     <ListItemAvatar>
-                      <Avatar
-                        variant="rounded"
-                        src={ProfilePic}
-                        sx={{
-                          ...theme.typography.commonAvatar,
-                          ...theme.typography.largestAvatar,
-                          backgroundColor: theme.palette.warning.light,
-                          color: theme.palette.warning.dark
-                        }}
-                      >
-                        
-                      </Avatar>
+                      {ruta &&
+                        <Avatar
+                          variant="rounded"
+                          src={`data:image/jpeg;base64,${ruta}`}
+                          sx={{
+                            ...theme.typography.commonAvatar,
+                            ...theme.typography.largestAvatar,
+                            backgroundColor: theme.palette.warning.light,
+                            color: theme.palette.warning.dark
+                          }}
+                          //style={{ maxWidth: '20%', height: 'auto' }}
+                        >
+                        </Avatar>
+                      }
                     </ListItemAvatar>
                   </ListItem>
                 </List>

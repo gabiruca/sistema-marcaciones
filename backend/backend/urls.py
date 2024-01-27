@@ -25,6 +25,8 @@ urlpatterns = [
     path("api/subirImg",views.SubirImg.as_view()),
     path("api/cargarImg/<str:cedula>",views.ObtenerImg.as_view()),
     path("api/publishedStatus/<str:cedula>/<str:mes>/<str:year>", views.IsPublicado.as_view()),
+    path("api/marcacionGrupal",views.MarcarArchivo.as_view()),
+    path("api/hashing/<str:passw>",views.Hashing.as_view()),
 ]
 
 if settings.DEBUG:

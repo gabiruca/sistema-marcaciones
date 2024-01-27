@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Grid,Typography, Button } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
-import ProfilePic from 'assets/images/picture-placeholder.jpg';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -19,7 +18,7 @@ const BodyPart = () => {
   const [datos, setDatos] = useState('');
   const [pass, setPass] = useState ('');
   const [newpass, setNewpass] = useState ('');
-  //const [ruta,setRuta]=useState('');
+  const [ruta,setRuta]=useState('');
   const form_data = new FormData();
   const [alertS, setAlertS]= useState(false);
   const [alertE, setAlertE]= useState(false);
@@ -97,7 +96,7 @@ const BodyPart = () => {
     }
   }, [alertE]);
 
-  /*function rutaImg(cedula){
+  function rutaImg(cedula){
     axios
     .request({
       method: "GET",
@@ -105,8 +104,8 @@ const BodyPart = () => {
     })
     .then((data) => {
       if (data.status === 200) {
-        setRuta(data.data.Ruta);
-        console.log(data.data.Ruta)
+        setRuta(data.data.imagen);
+        console.log(data.data.imagen, "route")
       }
     })
     .catch((error) => {
@@ -114,11 +113,11 @@ const BodyPart = () => {
         console.log(error.response)
       }
     });
-  }*/
+  }
 
   useEffect(() => {
     getInfoWorker(localStorage.getItem("Cedula"));
-    //rutaImg(localStorage.getItem("Cedula"));
+    rutaImg(localStorage.getItem("Cedula"));
   }, []);
   useEffect(() => {
     getInfoWorker(localStorage.getItem("Cedula"));
@@ -132,7 +131,7 @@ const BodyPart = () => {
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
               <div id="profile-head">
-                <img id="profile" src={ProfilePic} alt="profile" />
+                {ruta && <img src={`data:image/jpeg;base64,${ruta}`} alt="Imagen" style={{ maxWidth: '20%', height: 'auto' }}/>}
                 <Typography variant="h2" id="name">{datos.Nombres + " "}{datos.Apellidos}</Typography>
               </div>
             </Grid>

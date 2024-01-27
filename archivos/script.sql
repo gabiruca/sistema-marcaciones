@@ -50,21 +50,14 @@ create table Inconsistencia(
 
 
 #DATOS DE PRUEBA
-insert into Usuario (codigoBiometrico,cedula,rol,fechaNacimiento,email,fechaContrato,password,nombres,apellidos,genero) values (1,'0000000000','ADMIN','1991-05-23','admin@micabal.com','1991-05-23','@dm1nM1c@b@l','Administrador','','');
-insert into Usuario (codigoBiometrico,cedula,rol,fechaNacimiento,email,fechaContrato,password,nombres,apellidos,genero) values (2,'1123456789','USER','1980-02-02','user@micabal.com','2020-10-06','xyz1','Jane','Doe','F');
-insert into Usuario (codigoBiometrico,cedula,rol,fechaNacimiento,email,fechaContrato,password,nombres,apellidos,genero) values (3,'0123456788','USER','1994-01-05','user1@micabal.com','2019-12-10','xyz','Dylan','Perez','M');
+insert into Usuario (codigoBiometrico,cedula,rol,fechaNacimiento,email,fechaContrato,password,nombres,apellidos,genero) values (1,'0000000000','ADMIN','1991-05-23','admin@micabal.com','1991-05-23','pbkdf2_sha256$600000$wfMfJkhC8tBRYpm6mrf4Dq$DF2es21kXS7JA1q5nHD1g+sS2DaKRpgVtOUh4fYZSXA=','Administrador','','');
+insert into Usuario (codigoBiometrico,cedula,rol,fechaNacimiento,email,fechaContrato,password,nombres,apellidos,genero) values (2,'1123456789','USER','1980-02-02','user@micabal.com','2020-10-06','pbkdf2_sha256$600000$jID5MjmFcaEGTYtdlkvJK5$LjENM9Zlw2O/+TJ73s2vtjFPGGY1ZY0NNrmb/SuIYiI=','Jane','Doe','F');
+insert into Usuario (codigoBiometrico,cedula,rol,fechaNacimiento,email,fechaContrato,password,nombres,apellidos,genero) values (3,'0123456788','USER','1994-01-05','user1@micabal.com','2019-12-10','xypbkdf2_sha256$600000$NOX64lb6tuSxuggd69lSGJ$S1RRfgQKIXFHsF1iBWmNjAqxLX6kmNUPGPH27AeHu3E=z','Dylan','Perez','M');
 
 insert into Marcacion (codigoBiometrico,fecha,horaEntrada,horaSalida) values (2,'2023-09-26','07:57:20','18:06:15');
 insert into Marcacion (codigoBiometrico,fecha,horaEntrada,horaSalida) values (2,'2023-09-27','09:36:02','18:56:50');
 insert into Marcacion (codigoBiometrico,fecha,horaEntrada,horaSalida) values (2,'2023-09-18','08:00:02','18:32:50');
 insert into Marcacion (codigoBiometrico,fecha,horaEntrada,horaSalida) values (3,'2023-09-19','09:00:02','18:15:50');
 
-insert into TipoJustificacion (descripcion,codigoBiometrico) values ('Asunto familiar',3);
-insert into TipoJustificacion (descripcion,codigoBiometrico) values ('Cita médica',1);
-insert into TipoJustificacion (descripcion,codigoBiometrico) values ('Asunto familiar',2);
 
-insert into Inconsistencia (idMarcacion,idTipo) values (1,1);
-insert into Inconsistencia (idMarcacion,estado,idTipo) values (2,'P',2);
-insert into Inconsistencia (idMarcacion,estado,idTipo) values (3,'P',3);
-
-select * from TipoJustificacion;
+select * from Usuario;

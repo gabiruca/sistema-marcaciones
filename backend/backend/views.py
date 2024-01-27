@@ -2,6 +2,12 @@ from datetime import datetime
 from django.http import JsonResponse, HttpResponse
 from rest_framework import generics
 from .models import *
+import base64
+from django.http import HttpResponse
+from django.conf import settings
+import os
+from django.contrib.auth.hashers import make_password, check_password
+from openpyxl import load_workbook
 
 #El test de la api funcional
 class Test(generics.GenericAPIView):
@@ -16,7 +22,7 @@ class ValidateLogin(generics.GenericAPIView):
         try:
             worker=Usuario.objects.get(cedula=cedula)
             workerPass=worker.password
-            if(workerPass==passw):
+            if check_password(passw, workerPass):
                 return JsonResponse({"Cedula":worker.cedula},status=200)
             else:
                 return HttpResponse({'Credenciales incorrectas'},status=500)
@@ -129,8 +135,8 @@ class NewPassword(generics.GenericAPIView):
             passOld=request.data['old']
             passNew=request.data['new']
             user=Usuario.objects.get(cedula=cedula)
-            if(user.password==passOld):
-                user.password=passNew
+            if(check_password(passOld,user.password)):
+                user.password=make_password(passNew)
                 user.save()
                 return JsonResponse({"msg":"Contraseña cambiada correctamente"},status=200)
         except(Usuario.objects.get(cedula=cedula).DoesNotExist):
@@ -306,10 +312,11 @@ class Registrar(generics.GenericAPIView):
         cont = fechaC.strftime("%Y-%m-%d")
         gen=request.data["gen"]
         users=Usuario.objects.filter(cedula=cedula)
+        hash = make_password(cedula)
         print(cedula,biom,born,email,cont,nombres,apellidos,gen)
         if(users.count()==0):
             if(Usuario.objects.filter(codigoBiometrico=biom).count()==0):
-                newUser=Usuario(cedula=cedula,codigoBiometrico=biom,rol='USER',fechaNacimiento=born,email=email,password=cedula,fechaContrato=cont,nombres=nombres,apellidos=apellidos,genero=gen)
+                newUser=Usuario(cedula=cedula,codigoBiometrico=biom,rol='USER',fechaNacimiento=born,email=email,password=hash,fechaContrato=cont,nombres=nombres,apellidos=apellidos,genero=gen)
                 newUser.save()
                 return JsonResponse({'msg': 'Usuario registrado'},status=200)
         else:
@@ -352,9 +359,16 @@ class ObtenerImg(generics.GenericAPIView):
             rutaimg=user.nombreimg
             if(rutaimg==None):
                 rutaimg="picture-placeholder.jpg"
-            return JsonResponse({'Ruta': rutaimg}, status=200)
+            route=os.path.join(settings.MEDIA_ROOT, rutaimg)
+            try:
+                with open(f'media/{rutaimg}', 'rb') as imagen_file:
+                    imagen_base64 = base64.b64encode(imagen_file.read()).decode('utf-8')
+                    return JsonResponse({'imagen': imagen_base64})
+            except FileNotFoundError:
+                return HttpResponse("La imagen no fue encontrada", status=404)
         except(Usuario.objects.get(cedula=cedula).DoesNotExist):
             return JsonResponse({'message': 'No se pudo encontrar la ruta de la imagen'})
+        
         
 class IsPublicado(generics.GenericAPIView):
     def get(self, request,cedula,mes,year):
@@ -372,3 +386,29 @@ class IsPublicado(generics.GenericAPIView):
             return JsonResponse({"isPublicado":publicado},status=200)
         except(Usuario.objects.get(cedula=cedula).DoesNotExist):
             return JsonResponse({'msg': 'Usuario vinculado a esta cédula no existe'},status=404)
+        
+class MarcarArchivo(generics.GenericAPIView):
+    def post(self,request):
+        if request.method == 'POST':
+            archivo = request.data['archivo']
+            ruta_destino = os.path.join(settings.MEDIA_ROOT, archivo.name)
+            with open(ruta_destino, 'wb') as destino:
+                for chunk in archivo.chunks():
+                    destino.write(chunk)
+
+            wb = load_workbook(archivo, read_only=True)
+            hoja = wb.active
+            for fila in hoja.iter_rows(min_row=3, values_only=True):  
+                # Aqui corresponde el manejo del guardo de informacion del archivo
+                for celda in fila:
+                    print(celda)
+            wb.close()
+
+            return JsonResponse({'mensaje': 'datos guardados correctamente.'})
+        return JsonResponse({'mensaje': 'Error al procesar la solicitud.'}, status=400)
+
+
+class Hashing(generics.GenericAPIView):
+    def get(self,request,passw):
+        passwd=make_password(passw)
+        return JsonResponse({'hashed': passwd})
